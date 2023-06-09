@@ -21,6 +21,7 @@ class BaseResultWriter(object):
         "start_time", 
         "end_time", 
         "duration",
+        "random_seed",
     ]
 
     def __init__(self, csv_file_path: str, more_header: list[str]):

@@ -19,8 +19,8 @@ def print_balancing_strategies_names() -> None:
     print_enum_values(BalancingStrategies)
 
 
-def convert_str_arg_to_balancing_strategy(arg: str) -> BalancingStrategies:
+def convert_str_arg_to_balancing_strategy(arg: str):
     """
     Convert a string argument to a BalancingStrategies.
     """
-    convert_str_arg_to_enum_member(arg, BalancingStrategies)
+    return convert_str_arg_to_enum_member(arg, BalancingStrategies)

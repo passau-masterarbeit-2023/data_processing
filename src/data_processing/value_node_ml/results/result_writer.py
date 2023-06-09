@@ -11,7 +11,7 @@ class ClassificationResultsWriter(BaseResultWriter):
     """
     ADDITIONAL_HEADERS: list[str] = [
         "data_loading_duration", 
-        "data_balancing_duration", # TODO: implement balancing
+        "data_balancing_duration",
         "balancing_type", # TODO: implement balancing
         "model_name",
         "training_dataset_origin", 

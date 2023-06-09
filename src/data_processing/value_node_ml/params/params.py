@@ -37,8 +37,31 @@ class ProgramParams(BaseProgramParams):
         super().__init__(load_program_argv, debug)
 
         # keep results
+        self.__results_manager_init()
+    
+    def __results_manager_init(self):
+        """
+        Initialize results manager, and start keeping results-related information.
+        """
+        # create results manager
         self.results_manager = BaseResultsManager[PipelineNames, ClassificationResultsWriter](
             self.CSV_CLASSIFICATION_RESULTS_PATH, ClassificationResultsWriter
+        )
+
+        # save data origins
+        self.results_manager.set_result_forall(
+            "training_dataset_origin",
+            "-".join([origin.value for origin in self.data_origins_training])
+        )
+        if self.data_origins_testing is not None:
+            self.results_manager.set_result_forall(
+                "testing_dataset_origin", 
+                "-".join([origin.value for origin in self.data_origins_testing])
+            )
+        
+        self.results_manager.set_result_forall(
+            "random_seed",
+            str(self.RANDOM_SEED)
         )
     
     def _load_program_argv(self):

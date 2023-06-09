@@ -39,17 +39,6 @@ def main(params: ProgramParams):
 
     # load & clean data
     origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels] = {}
-    
-    # save data origins
-    params.results_manager.set_result_forall(
-        "training_dataset_origin",
-        "-".join([origin.value for origin in params.data_origins_training])
-    )
-    if params.data_origins_testing is not None:
-        params.results_manager.set_result_forall(
-            "testing_dataset_origin", 
-            "-".join([origin.value for origin in params.data_origins_testing])
-        )
 
     all_origins = params.data_origins_training
     if params.data_origins_testing is not None:

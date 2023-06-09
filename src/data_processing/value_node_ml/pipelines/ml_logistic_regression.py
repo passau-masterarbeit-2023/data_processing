@@ -4,10 +4,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 
 from commons.utils.ml_utils.ml_evaluate import evaluate
+from commons.params.data_origin import DataOriginEnum
+from value_node_ml.data_balancing.data_balancing import apply_balancing
 from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.pipelines.pipeline_utils import handle_data_origin, split_samples_and_labels
-from commons.params.data_origin import DataOriginEnum
+from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
 from value_node_ml.pipelines.univariate_feature_selection import __compute_distance_f_test_p_val
 from value_node_ml.params.params import ProgramParams
 
@@ -24,6 +25,9 @@ def __ml_logistic_regression_pipeline(
     else:
         X_train, y_train = samples_and_labels_train
         X_test, y_test = samples_and_labels_test
+    
+    # balance data
+    X_train, y_train = apply_balancing(params, X_train, y_train, PipelineNames.ML_LOGISTIC_REG)
 
     # Feature selection
     selector = SelectKBest(f_classif, k=10)

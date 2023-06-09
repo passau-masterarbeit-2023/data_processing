@@ -2,9 +2,9 @@ from typing import Optional
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score
-from imblearn.under_sampling import RandomUnderSampler
 
-from value_node_ml.pipelines.pipeline_utils import handle_data_origin, split_samples_and_labels
+from value_node_ml.data_balancing.data_balancing import apply_balancing
+from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
 from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.pipeline_params import PipelineNames
 from commons.params.data_origin import DataOriginEnum
@@ -28,9 +28,8 @@ def __ml_random_forest_pipeline(
         X_train, y_train = samples_and_labels_train
         X_test, y_test = samples_and_labels_test
     
-    # Perform undersampling on the majority class
-    rus = RandomUnderSampler(random_state=42)
-    X_res, y_res = rus.fit_resample(X_train, y_train)
+    # balance data
+    X_res, y_res = apply_balancing(params, X_train, y_train, PipelineNames.ML_RANDOM_FOREST)
 
     # Train a RandomForestClassifier
     clf = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs = params.MAX_ML_WORKERS)

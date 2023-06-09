@@ -27,6 +27,7 @@ class BaseProgramParams(ABC):
     # default values
     MAX_ML_WORKERS: int
     DEBUG: bool
+    RANDOM_SEED: int
 
     # logger
     COMMON_LOGGER_DIR_PATH: str
