@@ -9,7 +9,7 @@ from value_node_ml.data_balancing.data_balancing import apply_balancing
 from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.pipeline_params import PipelineNames
 from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
-from value_node_ml.pipelines.univariate_feature_selection import __compute_distance_f_test_p_val
+from value_node_ml.pipelines.feature_engineering.univariate_feature_selection import __compute_distance_f_test_p_val
 from value_node_ml.params.params import ProgramParams
 
 def __ml_logistic_regression_pipeline(
