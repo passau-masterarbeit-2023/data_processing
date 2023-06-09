@@ -30,9 +30,9 @@ class CLIArguments:
             -p pipelines
             -otr origins training
             -ots origins testing
-            -b use data batch
-            -bst balancing strategy
+            -b balancing strategy
             -h help
+            --profile launch profiler
         
         usage example:
             python3 main.py -m GRID_SEARCH_CV -b OVER -t /home/onyr/Documents/code/phdtrack/phdtrack_data/Training/Training/scp/V_7_8_P1/16 -e /home/onyr/Documents/code/phdtrack/phdtrack_data/Validation/Validation/scp/V_7_8_P1/16 -d False -v 2
@@ -41,8 +41,7 @@ class CLIArguments:
         parser.add_argument(
             '-d',
             '--debug', 
-            type=bool, 
-            default=None,
+            action='store_true',
             help="debug, True or False"
         )
         parser.add_argument(
@@ -78,16 +77,15 @@ class CLIArguments:
         )
         parser.add_argument(
             '-b',
-            '--batch',
-            action='store_true',
-            help="Use data batch for lazy data loading"
-        )
-        parser.add_argument(
-            '-bst',
             '--balancing_strategy',
             type=str,
             default=None,
             help="Balancing strategy for training data. Possible strategies: " + str(list(map(lambda x: x.name.lower(), BalancingStrategies)))
+        )
+        parser.add_argument(
+            '--profile',
+            action='store_true',
+            help="Launch profiler"
         )
 
         # save parsed arguments

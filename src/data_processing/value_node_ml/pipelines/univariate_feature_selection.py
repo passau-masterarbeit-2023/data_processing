@@ -2,10 +2,10 @@ from typing import Optional
 import numpy as np
 from sklearn.feature_selection import SelectKBest, f_classif
 
-from value_node_ml.data_loading.data_types import SamplesAndLabels, SamplesAndLabelsUnion
+from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.pipeline_params import PipelineNames
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.pipelines.pipeline_utils import handle_data_origin_consume_generator
+from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
 from value_node_ml.params.params import ProgramParams
 
 
@@ -67,24 +67,15 @@ def __univariate_feature_selection_pipeline(
 
 def univariate_feature_selection_pipeline(
         params: ProgramParams, 
-        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabelsUnion]
+        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
     ) -> None:
     """
     Pipeline for feature selection.
     """
 
-    samples_and_labels_train: SamplesAndLabels 
-    samples_and_labels_test: Optional[SamplesAndLabels] = None
-
-    samples_and_labels_train = handle_data_origin_consume_generator(
-        params.data_origins_training,
-        origin_to_samples_and_labels
+    samples_and_labels_train, samples_and_labels_test, = split_samples_and_labels(
+        params, origin_to_samples_and_labels
     )
-    if params.data_origins_testing is not None:
-        samples_and_labels_test = handle_data_origin_consume_generator(
-            params.data_origins_testing,
-            origin_to_samples_and_labels
-        )
     
     # launch the pipeline
     __univariate_feature_selection_pipeline(params, samples_and_labels_train, samples_and_labels_test)

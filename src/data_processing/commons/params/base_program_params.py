@@ -20,13 +20,12 @@ class BaseProgramParams(ABC):
     ### cli args
     data_origins_training: set[DataOriginEnum]
     data_origins_testing: set[DataOriginEnum]
-    use_batch: bool = False
     
     ### env vars
     # NOTE: all None values NEED to be overwritten by the .env file
     
     # default values
-    MAX_ML_WORKERS: int = 10
+    MAX_ML_WORKERS: int
     DEBUG: bool
 
     # logger
@@ -37,6 +36,10 @@ class BaseProgramParams(ABC):
     COMMON_LOGGER: logging.Logger 
     RESULTS_LOGGER: logging.Logger
     SAVE_RESULT_LOGS: bool
+
+    # profiling
+    PROFILE: bool
+    PROFILING_LOGS_DIR_PATH: str
 
     def __init__(
             self, 
@@ -75,7 +78,6 @@ class BaseProgramParams(ABC):
         """
         Init values as instance variables.
         """
-        self.use_batch = False
         self.DEBUG = False
         self.MAX_ML_WORKERS = 10
         self.COMMON_LOGGER = logging.getLogger("common_logger")

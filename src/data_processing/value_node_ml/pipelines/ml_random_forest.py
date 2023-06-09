@@ -4,10 +4,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score
 from imblearn.under_sampling import RandomUnderSampler
 
-from value_node_ml.data_loading.data_types import SamplesAndLabels, SamplesAndLabelsUnion
+from value_node_ml.pipelines.pipeline_utils import handle_data_origin, split_samples_and_labels
+from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.pipeline_params import PipelineNames
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.pipelines.pipeline_utils import handle_data_origin_consume_generator
 from value_node_ml.params.params import ProgramParams
 
 
@@ -53,24 +53,15 @@ def __ml_random_forest_pipeline(
 
 def ml_random_forest_pipeline(
         params: ProgramParams, 
-        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabelsUnion]
+        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
     ) -> None:
     """
     Pipeline for training a RandomForestClassifier.
     """
 
-    samples_and_labels_train: SamplesAndLabels 
-    samples_and_labels_test: Optional[SamplesAndLabels] = None
-
-    samples_and_labels_train = handle_data_origin_consume_generator(
-        params.data_origins_training,
-        origin_to_samples_and_labels
+    samples_and_labels_train, samples_and_labels_test, = split_samples_and_labels(
+        params, origin_to_samples_and_labels
     )
-    if params.data_origins_testing is not None:
-        samples_and_labels_test = handle_data_origin_consume_generator(
-            params.data_origins_testing,
-            origin_to_samples_and_labels
-        )
     
     # launch the pipeline
     __ml_random_forest_pipeline(params, samples_and_labels_train, samples_and_labels_test)

@@ -80,6 +80,7 @@ class ProgramParams(BaseProgramParams):
             try:
                 self.pipelines = set(map(convert_str_arg_to_pipeline_name, self.cli_args.args.pipelines))
                 assert isinstance(self.pipelines, set)
+
             except ValueError:
                     print(f"ERROR: Invalid pipeline name: {self.cli_args.args.pipelines}")
                     exit(1)
@@ -94,7 +95,8 @@ class ProgramParams(BaseProgramParams):
         except ValueError:
             print(f"ERROR: Invalid balancing strategy: {self.cli_args.args.balancing_strategy}")
             exit(1)
+        
+        if self.cli_args.args.profile is not None:
+            self.PROFILE = self.cli_args.args.profile
+            assert isinstance(self.PROFILE, bool)
 
-        # None if here, batch is either True or False
-        self.use_batch = self.cli_args.args.batch
-        assert isinstance(self.use_batch, bool)

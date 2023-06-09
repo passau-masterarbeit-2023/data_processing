@@ -1,18 +1,19 @@
 from datetime import datetime
+from pathlib import Path
 from commons.utils.utils import DATETIME_FORMAT, time_measure_result
+from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.data_loading.data_loading import load
-from value_node_ml.data_loading.data_types import SamplesAndLabelsUnion
 from commons.params.data_origin import DataOriginEnum
 from value_node_ml.params.pipeline_params import print_pipeline_names
 from value_node_ml.pipelines.pipelines import PIPELINE_NAME_TO_FUNCTION
 from value_node_ml.params.params import ProgramParams
 
+
+import cProfile
 import pandas as pd
 
 # run: python src/feature_engineering/main.py
-def main():
-    print("🚀 Running program...")
-    params = ProgramParams()
+def main(params: ProgramParams):
 
     # consume program argv pipelines and run them
     if params.pipelines is None:
@@ -37,7 +38,7 @@ def main():
             exit(1)
 
     # load & clean data
-    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabelsUnion] = {}
+    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels] = {}
     
     # save data origins
     params.results_manager.set_result_forall(
@@ -110,10 +111,47 @@ def main():
         params.results_manager.write_results_for(pipeline_name)
                 
         
+def profiling_main(params: ProgramParams):
+    import cProfile
+    import pstats
+    import datetime
+
+    FUNCTION_TO_PROFILE = main
+    timestamp = datetime.datetime.now().strftime(DATETIME_FORMAT)
+
+    # profile code
+    profiler = cProfile.Profile()
+    profiler.runctx(
+        FUNCTION_TO_PROFILE.__name__ + "(params)", 
+        globals(), locals(), 
+    )
+
+    # create and sort stats
+    stats = pstats.Stats(profiler)
+    stats.sort_stats('cumulative')
+
+    # write stats to a file
+    stat_file_path = Path(params.PROFILING_LOGS_DIR_PATH).joinpath(
+        f'sorted_profiling_output_{timestamp}.txt'
+    )
+
+    with open(stat_file_path, 'w') as f:
+        stats.stream = f
+        stats.print_stats()
 
 
 
 
 if __name__ == "__main__":
-    main()
+
+    print("🚀 Running program...")
+    params = ProgramParams()
+
+    # run main
+    if params.PROFILE:
+        profiling_main(params)
+    else:
+        main(params)
+
+    #cProfile.run('main()')
 

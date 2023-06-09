@@ -14,17 +14,17 @@ class PipelineNames(Enum):
     ML_SGD = "ml_sgd"
 
 
-def print_pipeline_names() -> None:
+def print_pipeline_names():
     """
     Print the possible values of the PipelineNames.
     """
     print_enum_values(PipelineNames)
 
 
-def convert_str_arg_to_pipeline_name(arg: str) -> PipelineNames:
+def convert_str_arg_to_pipeline_name(arg: str):
     """
     Convert a string argument to a PipelineNames.
     """
-    convert_str_arg_to_enum_member(arg, PipelineNames)
+    return convert_str_arg_to_enum_member(arg, PipelineNames)
 
 

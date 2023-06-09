@@ -13,6 +13,7 @@ def convert_str_arg_to_enum_member(arg: str, enum_class: Enum) -> Enum:
     """
     for member in enum_class:
         if arg == member.value or arg.lower() == member.name.lower():
+            print(f"Found {enum_class.__name__}: {member}")
             return member
 
     # If the code reaches here, the argument did not match any Enum member

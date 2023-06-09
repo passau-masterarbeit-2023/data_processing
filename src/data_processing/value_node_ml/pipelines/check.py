@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from value_node_ml.data_loading.data_types import SamplesAndLabelsUnion, is_datagenerator, is_datatuple
 from commons.params.data_origin import DataOriginEnum
+from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.params import ProgramParams
+
 
 def __check_samples_and_labels(params: ProgramParams, samples: pd.DataFrame, labels: pd.Series):
     """
@@ -41,23 +42,13 @@ def __check_samples_and_labels(params: ProgramParams, samples: pd.DataFrame, lab
     params.COMMON_LOGGER.info(f"✅ Checked samples and labels.")
 
 
-
-def check(params: ProgramParams, origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabelsUnion]) -> None:
+def check(params: ProgramParams, origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]) -> None:
     """
     Pipeline for checking the samples and labels.
     """
     for data_origin, samples_and_labels in origin_to_samples_and_labels.items():
         params.COMMON_LOGGER.info(f"Checking samples and labels for data origin: {data_origin}")
 
-        if is_datatuple(samples_and_labels):
-            # check the samples and labels
-            samples, labels = samples_and_labels
-            __check_samples_and_labels(params, samples, labels)
-        elif is_datagenerator(samples_and_labels):
-            # check the samples and labels
-            for samples, labels in samples_and_labels:
-                __check_samples_and_labels(params, samples, labels)
-        else:
-            raise TypeError(f"Invalid type for samples_and_labels [origin: {data_origin}]: {type(samples_and_labels)}")
-
+        samples, labels = samples_and_labels
+        __check_samples_and_labels(params, samples, labels)
 
