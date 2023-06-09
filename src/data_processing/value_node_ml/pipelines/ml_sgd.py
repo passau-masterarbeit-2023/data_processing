@@ -5,11 +5,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score
 from imblearn.under_sampling import RandomUnderSampler
 import pandas as pd
+from commons.params.data_origin import DataOriginEnum
 
 from value_node_ml.data_loading.data_types import SamplesAndLabelsGenerator, SamplesAndLabels, SamplesAndLabelsUnion, is_datagenerator, is_datatuple
 from value_node_ml.data_loading.data_loading import consume_data_generator
 from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.params.data_origin import DataOriginEnum
 from value_node_ml.pipelines.pipeline_utils import handle_data_origin_respecting_generator
 from value_node_ml.params.params import ProgramParams
 

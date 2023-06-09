@@ -7,7 +7,7 @@ from commons.utils.ml_utils.ml_evaluate import evaluate
 from value_node_ml.data_loading.data_types import SamplesAndLabels, SamplesAndLabelsUnion
 from value_node_ml.params.pipeline_params import PipelineNames
 from value_node_ml.pipelines.pipeline_utils import handle_data_origin_consume_generator
-from value_node_ml.params.data_origin import DataOriginEnum
+from commons.params.data_origin import DataOriginEnum
 from value_node_ml.pipelines.univariate_feature_selection import __compute_distance_f_test_p_val
 from value_node_ml.params.params import ProgramParams
 

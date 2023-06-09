@@ -2,7 +2,7 @@ from datetime import datetime
 from commons.utils.utils import DATETIME_FORMAT, time_measure_result
 from value_node_ml.data_loading.data_loading import load
 from value_node_ml.data_loading.data_types import SamplesAndLabelsUnion
-from value_node_ml.params.data_origin import DataOriginEnum
+from commons.params.data_origin import DataOriginEnum
 from value_node_ml.params.pipeline_params import print_pipeline_names
 from value_node_ml.pipelines.pipelines import PIPELINE_NAME_TO_FUNCTION
 from value_node_ml.params.params import ProgramParams

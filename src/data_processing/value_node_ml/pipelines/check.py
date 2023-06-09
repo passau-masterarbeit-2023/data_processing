@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from value_node_ml.data_loading.data_types import SamplesAndLabels, SamplesAndLabelsUnion, SamplesAndLabelsGenerator, is_datagenerator, is_datatuple
-from value_node_ml.params.data_origin import DataOriginEnum
+from value_node_ml.data_loading.data_types import SamplesAndLabelsUnion, is_datagenerator, is_datatuple
+from commons.params.data_origin import DataOriginEnum
 from value_node_ml.params.params import ProgramParams
 
 def __check_samples_and_labels(params: ProgramParams, samples: pd.DataFrame, labels: pd.Series):

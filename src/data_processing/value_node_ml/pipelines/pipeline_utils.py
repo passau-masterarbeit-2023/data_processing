@@ -1,8 +1,8 @@
-
 import pandas as pd
+
 from value_node_ml.data_loading.data_loading import consume_data_generator
-from value_node_ml.data_loading.data_types import SamplesAndLabelsGenerator, SamplesAndLabels, SamplesAndLabelsUnion, is_datagenerator, is_datatuple
-from value_node_ml.params.data_origin import DataOriginEnum
+from value_node_ml.data_loading.data_types import SamplesAndLabelsUnion, is_datagenerator, is_datatuple
+from commons.params.data_origin import DataOriginEnum
 
 
 def handle_data_origin_consume_generator(

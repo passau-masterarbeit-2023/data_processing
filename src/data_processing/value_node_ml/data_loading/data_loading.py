@@ -9,7 +9,7 @@ from typing import Generator, Tuple
 from value_node_ml.data_loading.data_cleaning import clean
 from value_node_ml.data_loading.data_types import SamplesAndLabelsGenerator, SamplesAndLabels, SamplesAndLabelsUnion
 from commons.utils.data_utils import count_positive_and_negative_labels
-from value_node_ml.params.data_origin import DataOriginEnum
+from commons.params.data_origin import DataOriginEnum
 from commons.utils.utils import time_measure_result
 from value_node_ml.params.params import ProgramParams
 

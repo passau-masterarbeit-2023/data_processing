@@ -6,7 +6,7 @@ from imblearn.under_sampling import RandomUnderSampler
 
 from value_node_ml.data_loading.data_types import SamplesAndLabels, SamplesAndLabelsUnion
 from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.params.data_origin import DataOriginEnum
+from commons.params.data_origin import DataOriginEnum
 from value_node_ml.pipelines.pipeline_utils import handle_data_origin_consume_generator
 from value_node_ml.params.params import ProgramParams
 
