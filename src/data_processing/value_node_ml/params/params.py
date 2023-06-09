@@ -1,10 +1,11 @@
 from commons.params.base_program_params import BaseProgramParams
 from commons.params.data_origin import convert_str_arg_to_data_origin
 from commons.results.base_result_manager import BaseResultsManager
+from value_node_ml.params.balancing_params import BalancingStrategies, convert_str_arg_to_balancing_strategy
 from value_node_ml.results.result_writer import ClassificationResultsWriter
+from value_node_ml.params.pipeline_params import PipelineNames, convert_str_arg_to_pipeline_name
 from value_node_ml.results.result_writer import ClassificationResultsWriter
 from ..cli import CLIArguments
-from value_node_ml.params.pipeline_params import PipelineNames, convert_str_arg_to_pipeline_name
 
 
 class ProgramParams(BaseProgramParams):
@@ -23,6 +24,9 @@ class ProgramParams(BaseProgramParams):
 
     # results
     CSV_CLASSIFICATION_RESULTS_PATH: str
+
+    # ML
+    balancing_strategy: BalancingStrategies
 
     def __init__(
             self, 
@@ -79,6 +83,18 @@ class ProgramParams(BaseProgramParams):
             except ValueError:
                     print(f"ERROR: Invalid pipeline name: {self.cli_args.args.pipelines}")
                     exit(1)
-        # No if here, batch is either True or False
+
+        try:
+            if self.cli_args.args.balancing_strategy is not None:
+                self.balancing_strategy = convert_str_arg_to_balancing_strategy(self.cli_args.args.balancing_strategy)
+            else:
+                self.balancing_strategy = BalancingStrategies.NO_BALANCING
+            
+            assert isinstance(self.balancing_strategy, BalancingStrategies)
+        except ValueError:
+            print(f"ERROR: Invalid balancing strategy: {self.cli_args.args.balancing_strategy}")
+            exit(1)
+
+        # None if here, batch is either True or False
         self.use_batch = self.cli_args.args.batch
         assert isinstance(self.use_batch, bool)

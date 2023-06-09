@@ -2,6 +2,7 @@
 import sys
 import argparse
 
+from value_node_ml.params.balancing_params import BalancingStrategies
 from value_node_ml.params.pipeline_params import PipelineNames
 
 # wrapped program flags
@@ -30,6 +31,7 @@ class CLIArguments:
             -otr origins training
             -ots origins testing
             -b use data batch
+            -bst balancing strategy
             -h help
         
         usage example:
@@ -79,6 +81,13 @@ class CLIArguments:
             '--batch',
             action='store_true',
             help="Use data batch for lazy data loading"
+        )
+        parser.add_argument(
+            '-bst',
+            '--balancing_strategy',
+            type=str,
+            default=None,
+            help="Balancing strategy for training data. Possible strategies: " + str(list(map(lambda x: x.name.lower(), BalancingStrategies)))
         )
 
         # save parsed arguments
