@@ -1,6 +1,6 @@
 import pandas as pd
 
-from commons.utils.utils import time_measure_result
+from commons.utils.results_utils import time_measure_result
 from value_node_ml.params.pipeline_params import PipelineNames
 from value_node_ml.params.balancing_params import BalancingStrategies
 from value_node_ml.data_loading.data_types import SamplesAndLabels
@@ -26,7 +26,7 @@ def resample_data(
     with time_measure_result(
             f'resample_data ({params.balancing_strategy})', 
             params.RESULTS_LOGGER, 
-            params.results_manager, 
+            params.ml_results_manager, 
             "data_balancing_duration"
         ):
         sampler = sampler_class(random_state=params.RANDOM_SEED)
@@ -45,17 +45,17 @@ def apply_balancing(
     if params.balancing_strategy == BalancingStrategies.NO_BALANCING:
         return samples, labels
     elif params.balancing_strategy in SAMPLING_STRATEGY_TO_RESAMPLING_FUNCTION.keys():
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name,
             "balancing_type",
             params.balancing_strategy.value
         )
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name,
             "nb_training_samples_before_balancing",
             str(len(samples))
         )
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name,
             "nb_positive_training_samples_before_balancing",
             str(len(labels[labels == 1]))
@@ -68,12 +68,12 @@ def apply_balancing(
             labels
         )
 
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name,
             "nb_training_samples_after_balancing",
             str(len(X_res))
         )
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name,
             "nb_positive_training_samples_after_balancing",
             str(len(y_res[y_res == 1]))

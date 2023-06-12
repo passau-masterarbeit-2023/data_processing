@@ -35,8 +35,8 @@ def __univariate_feature_selection_pipeline(
     Pipeline for univariate feature selection.
     """
 
-    params.results_manager.set_result_for(
-        PipelineNames.UNIVARIATE_FS ,"model_name", "univariate_feature_selection"
+    params.ml_results_manager.set_result_for(
+        PipelineNames.FE_UNIVARIATE ,"model_name", "univariate_feature_selection"
     )
 
     # Feature selection on training set (only)

@@ -5,9 +5,9 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.metrics import confusion_matrix, roc_curve, auc
 
 from commons.results.base_result_writer import BaseResultWriter
-from ..utils import time_measure_result
+from ..results_utils import time_measure_result
 
-    
+
 def evaluate(
         clf: Any, 
         test_samples: list[list[int]], 

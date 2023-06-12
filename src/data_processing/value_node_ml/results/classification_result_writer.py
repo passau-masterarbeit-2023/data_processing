@@ -2,6 +2,7 @@ from datetime import datetime
 from commons.results.base_result_writer import BaseResultWriter
 
 from commons.utils.utils import datetime2str
+from value_node_ml.params.pipeline_params import PipelineNames
 
 class ClassificationResultsWriter(BaseResultWriter):
     """
@@ -32,9 +33,5 @@ class ClassificationResultsWriter(BaseResultWriter):
         "auc"
     ]
 
-    def __init__(self, csv_file_path: str, pipeline_name: str):
-        super().__init__(csv_file_path, self.ADDITIONAL_HEADERS)
-        self.set_result("pipeline_name", pipeline_name)
-
-        # start time
-        self.set_result("start_time", datetime2str(datetime.now()))
+    def __init__(self, csv_file_path: str, pipeline_name: PipelineNames):
+        super().__init__(csv_file_path, self.ADDITIONAL_HEADERS, pipeline_name)

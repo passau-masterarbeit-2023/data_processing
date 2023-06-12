@@ -43,7 +43,7 @@ def __ml_logistic_regression_pipeline(
     # Train classifier
     clf = LogisticRegression(n_jobs = params.MAX_ML_WORKERS)
     clf.fit(X_train_transformed, y_train)
-    params.results_manager.set_result_for(
+    params.ml_results_manager.set_result_for(
         PipelineNames.ML_LOGISTIC_REG ,"model_name", "LogisticRegression"
     )
 
@@ -56,7 +56,7 @@ def __ml_logistic_regression_pipeline(
         X_test_transformed,
         y_test,
         params.RESULTS_LOGGER,
-        params.results_manager.get_result_writer_for(PipelineNames.ML_LOGISTIC_REG),
+        params.ml_results_manager.get_result_writer_for(PipelineNames.ML_LOGISTIC_REG),
     )
 
     # Return feature importance

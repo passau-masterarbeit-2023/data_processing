@@ -32,7 +32,7 @@ class BaseResultsManager(Generic[PipelineNamesEnum, ResultWriter]):
         for pipeline_name in PipelineNames:
             self.result_writer_dict[pipeline_name] = ResultWriterType(
                 self.csv_results_path,
-                pipeline_name ,
+                pipeline_name,
             )
     
     def set_result_forall(
@@ -52,18 +52,18 @@ class BaseResultsManager(Generic[PipelineNamesEnum, ResultWriter]):
         """
         self.result_writer_dict[pipeline_name].set_result(field, value)
 
-    def write_results_forall(self) -> None:
+    def save_results_forall(self) -> None:
         """
         Write results for all result keepers.
         """
         for classification_result_writer in self.result_writer_dict.values():
-            classification_result_writer.write_results()
+            classification_result_writer.save_results()
 
-    def write_results_for(self, pipeline_name: PipelineNamesEnum) -> None:
+    def save_results_for(self, pipeline_name: PipelineNamesEnum) -> None:
         """
         Write results for a specific result keeper.
         """
-        self.result_writer_dict[pipeline_name].write_results()
+        self.result_writer_dict[pipeline_name].save_results()
     
     def get_result_writer_for(self, pipeline_name: PipelineNamesEnum) -> ResultWriter:
         """

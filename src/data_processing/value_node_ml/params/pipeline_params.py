@@ -8,12 +8,28 @@ class PipelineNames(Enum):
     Pipeline names.
     """
     CHECK = "check"
-    UNIVARIATE_FS = "univariate_fs"
+
+    # ML
     ML_LOGISTIC_REG = "ml_logistic_reg"
     ML_RANDOM_FOREST = "ml_random_forest"
     ML_SGD = "ml_sgd"
-    FE_CORR = "fe_corr" # feature engineering - correlation
 
+    # feature engineering
+    FE_UNIVARIATE = "fe_univariate"
+    FE_CORR_PEARSON = "fe_corr_pearson" 
+    FE_CORR_KENDALL = "fe_corr_kendall"
+    FE_CORR_SPEARMAN = "fe_corr_spearman"
+
+def is_feature_engineering_pipeline(pipeline_name: PipelineNames):
+    """
+    Return True if the pipeline is a feature engineering pipeline.
+    """
+    return pipeline_name in [
+        PipelineNames.FE_UNIVARIATE,
+        PipelineNames.FE_CORR_PEARSON,
+        PipelineNames.FE_CORR_KENDALL,
+        PipelineNames.FE_CORR_SPEARMAN,
+    ]
 
 def print_pipeline_names():
     """

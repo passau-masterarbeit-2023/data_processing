@@ -1,10 +1,11 @@
 from commons.params.base_program_params import BaseProgramParams
 from commons.params.data_origin import convert_str_arg_to_data_origin
 from commons.results.base_result_manager import BaseResultsManager
+from value_node_ml.results.feature_engineering_result_writer import FeatureEngineeringResultsWriter
 from value_node_ml.params.balancing_params import BalancingStrategies, convert_str_arg_to_balancing_strategy
-from value_node_ml.results.result_writer import ClassificationResultsWriter
-from value_node_ml.params.pipeline_params import PipelineNames, convert_str_arg_to_pipeline_name
-from value_node_ml.results.result_writer import ClassificationResultsWriter
+from value_node_ml.results.classification_result_writer import ClassificationResultsWriter
+from value_node_ml.params.pipeline_params import PipelineNames, convert_str_arg_to_pipeline_name, is_feature_engineering_pipeline
+from value_node_ml.results.classification_result_writer import ClassificationResultsWriter
 from ..cli import CLIArguments
 
 
@@ -12,7 +13,9 @@ class ProgramParams(BaseProgramParams):
     """
     Wrapper class for program parameters.
     """
-    results_manager: BaseResultsManager[PipelineNames, ClassificationResultsWriter]
+    ml_results_manager: BaseResultsManager[PipelineNames, ClassificationResultsWriter]
+    fe_results_manager: BaseResultsManager[PipelineNames, FeatureEngineeringResultsWriter]
+
     pipelines: list[PipelineNames]
     cli_args: CLIArguments
     
@@ -24,6 +27,7 @@ class ProgramParams(BaseProgramParams):
 
     # results
     CSV_CLASSIFICATION_RESULTS_PATH: str
+    CSV_FEATURE_ENGINEERING_RESULTS_PATH: str
     FEATURE_CORRELATION_MATRICES_RESULTS_DIR_PATH: str
 
     # ML
@@ -47,26 +51,39 @@ class ProgramParams(BaseProgramParams):
         """
         Initialize results manager, and start keeping results-related information.
         """
-        # create results manager
-        self.results_manager = BaseResultsManager[PipelineNames, ClassificationResultsWriter](
+        # create ML results manager
+        self.ml_results_manager = BaseResultsManager[PipelineNames, ClassificationResultsWriter](
             self.CSV_CLASSIFICATION_RESULTS_PATH, ClassificationResultsWriter
         )
 
-        # save data origins
-        self.results_manager.set_result_forall(
+        # create FE results manager
+        print("CSV_FEATURE_ENGINEERING_RESULTS_PATH", self.CSV_FEATURE_ENGINEERING_RESULTS_PATH)
+        self.fe_results_manager = BaseResultsManager[PipelineNames, FeatureEngineeringResultsWriter](
+            self.CSV_FEATURE_ENGINEERING_RESULTS_PATH, FeatureEngineeringResultsWriter
+        )
+
+        # save data origins on ML results manager
+        self.ml_results_manager.set_result_forall(
             "training_dataset_origin",
             "-".join([origin.value for origin in self.data_origins_training])
         )
         if self.data_origins_testing is not None:
-            self.results_manager.set_result_forall(
+            self.ml_results_manager.set_result_forall(
                 "testing_dataset_origin", 
                 "-".join([origin.value for origin in self.data_origins_testing])
             )
         
-        self.results_manager.set_result_forall(
+        self.ml_results_manager.set_result_forall(
             "random_seed",
             str(self.RANDOM_SEED)
         )
+
+        # save info for FE results manager
+        self.fe_results_manager.set_result_forall(
+            "training_dataset_origin",
+            "-".join([origin.value for origin in self.data_origins_training])
+        )
+    
     
     def _load_program_argv(self):
         """
@@ -127,3 +144,12 @@ class ProgramParams(BaseProgramParams):
             self.PROFILE = self.cli_args.args.profile
             assert isinstance(self.PROFILE, bool)
 
+
+    def save_results_to_csv(self, pipeline_name: PipelineNames):
+        """
+        Save results to CSV files.
+        """
+        if is_feature_engineering_pipeline(pipeline_name):
+            self.fe_results_manager.save_results_for(pipeline_name)
+        else:
+            self.ml_results_manager.save_results_for(pipeline_name)

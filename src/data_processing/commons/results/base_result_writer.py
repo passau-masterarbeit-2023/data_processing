@@ -1,8 +1,12 @@
 import csv
+from datetime import datetime
+from enum import Enum
 import os
 import platform
 import psutil
 from typing import Optional
+
+from commons.utils.utils import datetime2str
 
 
 class BaseResultWriter(object):
@@ -24,13 +28,24 @@ class BaseResultWriter(object):
         "random_seed",
     ]
 
-    def __init__(self, csv_file_path: str, more_header: list[str]):
+    def __init__(
+            self, 
+            csv_file_path: str, 
+            more_header: list[str],
+            pipeline_name: Enum,
+        ):
         self.csv_file_path = csv_file_path
         self.headers = self.BASE_HEADERS + more_header
         self.results = {header: None for header in self.headers + more_header}
         self.__save_system_info()
 
-        self.__already_written_results = False 
+        self.__already_written_results = False
+
+        # initialization
+        self.set_result("pipeline_name", pipeline_name.value)
+
+        # start time
+        self.set_result("start_time", datetime2str(datetime.now()))
 
     def set_result(self, field: str, value: Optional[str]) -> None:
         if field in self.results:
@@ -38,7 +53,7 @@ class BaseResultWriter(object):
         else:
             raise ValueError(f"ClassificationResultsWriter: Invalid field name: {field}")
         
-    def write_results(self) -> None:
+    def save_results(self) -> None:
         """
         Write the results to the CSV file.
         WARNING: This function MUST only be called once.

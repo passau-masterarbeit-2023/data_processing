@@ -5,6 +5,7 @@ from typing import Optional
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
+from value_node_ml.params.pipeline_params import PipelineNames
 from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.params import ProgramParams
 from commons.params.data_origin import DataOriginEnum
@@ -14,15 +15,29 @@ from commons.utils.utils import DATETIME_FORMAT
 def __correlation_feature_selection(
         params: ProgramParams, 
         samples_and_labels_train: SamplesAndLabels,
-        correlation_algorithm: str,
-        start_timestamp: str,
+        pipeline_name: PipelineNames,
+
     ) -> list[str]:
     """
     Pipeline for feature engineering correlation measurement.
     return: best columns names
     """
+    # select algorithm
+    correlation_algorithms = {
+        PipelineNames.FE_CORR_PEARSON: "pearson",
+        PipelineNames.FE_CORR_KENDALL: "kendall",
+        PipelineNames.FE_CORR_SPEARMAN: "spearman",
+    }
+    correlation_algorithm = correlation_algorithms[pipeline_name]
+
+    # log and results
     params.COMMON_LOGGER.info(f"Computing correlation (algorithm: {correlation_algorithm})...")
-    
+    params.fe_results_manager.set_result_for(
+        pipeline_name,
+        "feature_engineering_algorithm",
+        correlation_algorithm
+    )
+
     # Extract samples from training data
     samples, _ = samples_and_labels_train
 
@@ -33,7 +48,7 @@ def __correlation_feature_selection(
     # Convert scaled_samples back to DataFrame
     scaled_samples_df = pd.DataFrame(scaled_samples, columns=samples.columns)
 
-    # Calculate Pearson correlation matrix
+    # Calculate correlation matrix
     corr_matrix = scaled_samples_df.corr(correlation_algorithm)
 
     # Print the correlation matrix
@@ -46,7 +61,7 @@ def __correlation_feature_selection(
     corr_matrix_save_path: str = (
         params.FEATURE_CORRELATION_MATRICES_RESULTS_DIR_PATH + 
         "correlation_matrix_" + correlation_algorithm + "_" +
-        start_timestamp +
+        datetime.now().strftime(DATETIME_FORMAT) +
         ".png"
     )
     plt.savefig(corr_matrix_save_path)
@@ -55,6 +70,23 @@ def __correlation_feature_selection(
     # keep best columns
     # Calculate the sum of correlations for each column
     corr_sums = corr_matrix.abs().sum()
+
+    # keep results
+    sorted_corr_sums = corr_sums.sort_values(ascending=False)
+    params.fe_results_manager.set_result_for(
+        pipeline_name,
+        "descending_best_column_names",
+        "-".join(
+            sorted_corr_sums.index.tolist()
+        )
+    )
+    params.fe_results_manager.set_result_for(
+        pipeline_name,
+        "descending_best_column_values",
+        "-".join(
+            str(sorted_corr_sums.values.tolist())
+        )
+    )
     
     # Find the names of the columns that have the smallest sums
     # NOTE: We drop the 1 correlation of the column with itself by substracting 1 to the sums
@@ -70,27 +102,10 @@ def __correlation_feature_selection(
     return best_columns_names
 
 
-def __feature_engineering_correlation_selection(
+def __feature_engineering_correlation_measurement_pipeline(
         params: ProgramParams, 
-        samples_and_labels_train: SamplesAndLabels,
-        samples_and_labels_test: Optional[SamplesAndLabels],
-    ) -> None:
-    """
-    Pipeline for feature engineering correlation measurement.
-    NOTE: Correlation algorithms: pearson, kendall, spearman
-    """
-    correlation_algotithms = ["pearson", "kendall", "spearman"]
-
-    start_timestamp = datetime.now().strftime(DATETIME_FORMAT)
-    for correlation_algorithm in correlation_algotithms:
-        __correlation_feature_selection(
-            params, samples_and_labels_train, correlation_algorithm, start_timestamp
-        )
-        
-
-def feature_engineering_correlation_measurement_pipeline(
-        params: ProgramParams, 
-        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels],
+        pipeline_name: PipelineNames,
     ) -> None:
     """
     Pipeline for feature engineering correlation measurement.
@@ -101,4 +116,32 @@ def feature_engineering_correlation_measurement_pipeline(
     )
     
     # launch the pipeline
-    __feature_engineering_correlation_selection(params, samples_and_labels_train, samples_and_labels_test)
+    __correlation_feature_selection(
+        params, samples_and_labels_train, pipeline_name
+    )
+
+# pipelines functions
+def feature_engineering_correlation_measurement_pipeline_pearson(
+    params: ProgramParams, 
+    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+) -> None:
+    __feature_engineering_correlation_measurement_pipeline(
+        params, origin_to_samples_and_labels, PipelineNames.FE_CORR_PEARSON
+    )
+
+def feature_engineering_correlation_measurement_pipeline_kendall(
+    params: ProgramParams, 
+    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+) -> None:
+    __feature_engineering_correlation_measurement_pipeline(
+        params, origin_to_samples_and_labels, PipelineNames.FE_CORR_KENDALL
+    )
+
+def feature_engineering_correlation_measurement_pipeline_spearman(
+    params: ProgramParams, 
+    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+) -> None:
+    __feature_engineering_correlation_measurement_pipeline(
+        params, origin_to_samples_and_labels, PipelineNames.FE_CORR_SPEARMAN
+    )
+

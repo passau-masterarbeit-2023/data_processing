@@ -32,7 +32,7 @@ def __ml_sgd_pipeline(
     # Train a SGDClassifier
     print(params.MAX_ML_WORKERS)
     clf = SGDClassifier(random_state=42, n_jobs = params.MAX_ML_WORKERS)
-    params.results_manager.set_result_for(
+    params.ml_results_manager.set_result_for(
         PipelineNames.ML_SGD ,"model_name", "sgd"
     )
 

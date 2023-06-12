@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
-from commons.utils.utils import DATETIME_FORMAT, time_measure_result
+from commons.utils.utils import DATETIME_FORMAT
+from commons.utils.results_utils import time_measure_result
 from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.data_loading.data_loading import load
 from commons.params.data_origin import DataOriginEnum
@@ -47,7 +48,7 @@ def main(params: ProgramParams):
     with time_measure_result(
             f'load_samples_and_labels_from_all_csv_files', 
             params.RESULTS_LOGGER, 
-            params.results_manager, 
+            params.ml_results_manager, 
             "data_loading_duration"
         ):
         for data_origin in all_origins:
@@ -61,7 +62,7 @@ def main(params: ProgramParams):
     for pipeline_name in params.pipelines:
         # information about the current pipeline
         params.COMMON_LOGGER.info(f"Running pipeline: {pipeline_name}")
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name,
             "pipeline_name",
             pipeline_name.value,
@@ -69,7 +70,7 @@ def main(params: ProgramParams):
 
         # get current time using datetime
         start_time = datetime.now()
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name, "start_time", 
             start_time.strftime(DATETIME_FORMAT)
         )
@@ -81,7 +82,7 @@ def main(params: ProgramParams):
         
         # get current time using time 
         end_time = datetime.now()
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name, 
             "end_time", 
             end_time.strftime(DATETIME_FORMAT)
@@ -90,14 +91,14 @@ def main(params: ProgramParams):
         # compute duration
         duration = end_time - start_time
         duration_str = f"{duration.total_seconds():.9f}"
-        params.results_manager.set_result_for(
+        params.ml_results_manager.set_result_for(
             pipeline_name,
             "duration",
             duration_str,
         )
     
         # write results
-        params.results_manager.write_results_for(pipeline_name)
+        params.save_results_to_csv(pipeline_name)
                 
         
 def profiling_main(params: ProgramParams):

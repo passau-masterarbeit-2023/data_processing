@@ -34,7 +34,7 @@ def __ml_random_forest_pipeline(
     # Train a RandomForestClassifier
     clf = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs = params.MAX_ML_WORKERS)
     clf.fit(X_res, y_res)
-    params.results_manager.set_result_for(
+    params.ml_results_manager.set_result_for(
         PipelineNames.ML_RANDOM_FOREST ,"model_name", "RandomForest"
     )
 
