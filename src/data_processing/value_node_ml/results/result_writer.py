@@ -12,11 +12,11 @@ class ClassificationResultsWriter(BaseResultWriter):
     ADDITIONAL_HEADERS: list[str] = [
         "data_loading_duration", 
         "data_balancing_duration",
-        "balancing_type", # TODO: implement balancing
+        "balancing_type", 
         "model_name",
         "training_dataset_origin", 
         "testing_dataset_origin",
-        "nb_training_samples_before_balancing", # TODO: implement balancing
+        "nb_training_samples_before_balancing",
         "nb_positive_training_samples_before_balancing",
         "nb_training_samples_after_balancing",
         "nb_positive_training_samples_after_balancing", 

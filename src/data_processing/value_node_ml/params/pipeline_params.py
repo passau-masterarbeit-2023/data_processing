@@ -12,6 +12,7 @@ class PipelineNames(Enum):
     ML_LOGISTIC_REG = "ml_logistic_reg"
     ML_RANDOM_FOREST = "ml_random_forest"
     ML_SGD = "ml_sgd"
+    FE_CORR = "fe_corr" # feature engineering - correlation
 
 
 def print_pipeline_names():

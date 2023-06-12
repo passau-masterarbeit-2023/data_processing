@@ -4,6 +4,7 @@ from value_node_ml.pipelines.feature_engineering.univariate_feature_selection im
 from value_node_ml.pipelines.ml.ml_logistic_regression import ml_logistic_regression_pipeline
 from value_node_ml.pipelines.check import check
 from value_node_ml.pipelines.ml.ml_random_forest import ml_random_forest_pipeline
+from value_node_ml.pipelines.feature_engineering.correlation_feature_selection import feature_engineering_correlation_measurement_pipeline
 
 PIPELINE_NAME_TO_FUNCTION = {
     PipelineNames.CHECK : check,
@@ -11,5 +12,6 @@ PIPELINE_NAME_TO_FUNCTION = {
     PipelineNames.ML_LOGISTIC_REG : ml_logistic_regression_pipeline,
     PipelineNames.ML_RANDOM_FOREST : ml_random_forest_pipeline,
     PipelineNames.ML_SGD : ml_sgd_pipeline,
+    PipelineNames.FE_CORR: feature_engineering_correlation_measurement_pipeline,
 }
 

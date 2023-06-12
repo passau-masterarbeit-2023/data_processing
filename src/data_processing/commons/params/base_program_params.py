@@ -84,6 +84,8 @@ class BaseProgramParams(ABC):
         self.COMMON_LOGGER = logging.getLogger("common_logger")
         self.RESULTS_LOGGER = logging.getLogger("results_logger")
 
+        self.data_origins_testing = None
+
     
     def __load_env(self):
         """

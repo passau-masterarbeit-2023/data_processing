@@ -24,9 +24,13 @@ class ProgramParams(BaseProgramParams):
 
     # results
     CSV_CLASSIFICATION_RESULTS_PATH: str
+    FEATURE_CORRELATION_MATRICES_RESULTS_DIR_PATH: str
 
     # ML
     balancing_strategy: BalancingStrategies
+
+    # feature engineering
+    FEATURE_ENGINEERING_NB_KEEP_BEST_COLUMNS: int
 
     def __init__(
             self, 

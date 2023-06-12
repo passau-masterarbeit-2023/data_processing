@@ -58,7 +58,7 @@ def __univariate_feature_selection_pipeline(
     sorted_column_names = [column_names[i] for i in sorted_indices]
 
     # Print the sorted column names
-    params.RESULTS_LOGGER.info(f"Column names sorted by importance: [{', '.join(sorted_column_names)}]")
+    params.RESULTS_LOGGER.info(f"Column names sorted by (F_val, P_val) importance: [{', '.join(sorted_column_names)}]")
 
     # TODO: evaluate the performance of the classifier with the selected features
     #selector.fit(training_samples, training_labels)
