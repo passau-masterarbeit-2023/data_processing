@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import os
 
 # utils constants
 DATETIME_FORMAT = "%Y_%m_%d_%H_%M_%S_%f"
@@ -21,4 +22,9 @@ def datetime2str(datetime: datetime):
     return datetime.strftime(DATETIME_FORMAT)
 
 
-
+def check_and_create_directory(dir_path: str):
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+        print(f"Directory {dir_path} created.")
+    else:
+        print(f"Directory {dir_path} already exists.")

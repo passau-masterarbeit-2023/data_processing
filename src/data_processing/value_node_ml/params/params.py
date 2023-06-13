@@ -1,6 +1,7 @@
 from commons.params.base_program_params import BaseProgramParams
 from commons.params.data_origin import convert_str_arg_to_data_origin
 from commons.results.base_result_manager import BaseResultsManager
+from commons.params.app_params import AppName
 from value_node_ml.results.feature_engineering_result_writer import FeatureEngineeringResultsWriter
 from value_node_ml.params.balancing_params import BalancingStrategies, convert_str_arg_to_balancing_strategy
 from value_node_ml.results.classification_result_writer import ClassificationResultsWriter
@@ -44,7 +45,7 @@ class ProgramParams(BaseProgramParams):
             debug : bool = False,
             **kwargs
     ):
-        super().__init__(load_program_argv, debug)
+        super().__init__(AppName.VALUE_NODE_ML, load_program_argv, debug)
 
         # keep results
         self.__results_manager_init()

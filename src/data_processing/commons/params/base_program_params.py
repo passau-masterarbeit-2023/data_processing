@@ -1,6 +1,8 @@
-from abc import ABC, abstractmethod # for abstract classes
+from abc import ABC, abstractmethod
+
+from commons.params.app_params import AppName # for abstract classes
 from .data_origin import DataOriginEnum
-from commons.utils.utils import DATETIME_FORMAT, datetime2str
+from commons.utils.utils import DATETIME_FORMAT, check_and_create_directory, datetime2str
 
 import dotenv
 import os
@@ -16,6 +18,7 @@ class BaseProgramParams(ABC):
     This is a base class that contains the common parameters for all programs,
     like loggers, automatic path checking, etc.
     """
+    app_name: AppName
 
     ### cli args
     data_origins_training: set[DataOriginEnum]
@@ -44,6 +47,7 @@ class BaseProgramParams(ABC):
 
     def __init__(
             self, 
+            app_name: AppName,
             load_program_argv : bool = True, 
             debug : bool = False,
             **kwargs
@@ -60,6 +64,8 @@ class BaseProgramParams(ABC):
         debug and generate_important_log_file parameter is used 
         only if load_program_argv is True.
         """
+        self.app_name = app_name
+
         self.__init_default_values()
 
         if load_program_argv:
@@ -206,7 +212,8 @@ class BaseProgramParams(ABC):
         self.COMMON_LOGGER.setLevel(logging.DEBUG)
 
         # add RotatingFileHandler to common logger
-        common_log_file_path = self.COMMON_LOGGER_DIR_PATH + "/common_log.log"
+        check_and_create_directory(self.COMMON_LOGGER_DIR_PATH + self.app_name.value)
+        common_log_file_path = self.COMMON_LOGGER_DIR_PATH + self.app_name.value + "/common_log.log"
         common_log_file_handler = RotatingFileHandler(
             common_log_file_path, maxBytes=50000000, backupCount=5
         )
@@ -227,7 +234,8 @@ class BaseProgramParams(ABC):
 
         # Result logger using file handler
         if self.SAVE_RESULT_LOGS:
-            results_log_file_path = self.RESULTS_LOGGER_DIR_PATH + "/" + datetime2str(datetime.now()) + "_results.log"
+            check_and_create_directory(self.RESULTS_LOGGER_DIR_PATH + self.app_name.value)
+            results_log_file_path = self.RESULTS_LOGGER_DIR_PATH + self.app_name.value + "/" + datetime2str(datetime.now()) + "_results.log"
         else:
             results_log_file_path = common_log_file_path
         results_log_file_handler = logging.FileHandler(results_log_file_path)
