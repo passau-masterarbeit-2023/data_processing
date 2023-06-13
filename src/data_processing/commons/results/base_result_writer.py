@@ -24,8 +24,8 @@ class BaseResultWriter(object):
         "pipeline_name", 
         "start_time", 
         "end_time", 
-        "duration",
-        "random_seed",
+        "duration", 
+        "random_seed", # keep it everywhere, useful for rebalancing
     ]
 
     def __init__(

@@ -62,7 +62,7 @@ def main(params: ProgramParams):
     for pipeline_name in params.pipelines:
         # information about the current pipeline
         params.COMMON_LOGGER.info(f"Running pipeline: {pipeline_name}")
-        params.ml_results_manager.set_result_for(
+        params.set_result_for(
             pipeline_name,
             "pipeline_name",
             pipeline_name.value,
@@ -70,7 +70,7 @@ def main(params: ProgramParams):
 
         # get current time using datetime
         start_time = datetime.now()
-        params.ml_results_manager.set_result_for(
+        params.set_result_for(
             pipeline_name, "start_time", 
             start_time.strftime(DATETIME_FORMAT)
         )
@@ -82,7 +82,7 @@ def main(params: ProgramParams):
         
         # get current time using time 
         end_time = datetime.now()
-        params.ml_results_manager.set_result_for(
+        params.set_result_for(
             pipeline_name, 
             "end_time", 
             end_time.strftime(DATETIME_FORMAT)
@@ -91,7 +91,7 @@ def main(params: ProgramParams):
         # compute duration
         duration = end_time - start_time
         duration_str = f"{duration.total_seconds():.9f}"
-        params.ml_results_manager.set_result_for(
+        params.set_result_for(
             pipeline_name,
             "duration",
             duration_str,

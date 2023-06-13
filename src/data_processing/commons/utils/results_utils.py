@@ -15,6 +15,8 @@ def time_measure_result(
 ):
     """
     Measure the time elapsed since the begining of the context.
+    NB: time_measure_result is agnostic and just manages durations,
+        not start and end times.
     """
     if logger is not None:
         logger.info("timer for " + message + " started")

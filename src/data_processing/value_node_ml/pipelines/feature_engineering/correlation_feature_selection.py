@@ -76,14 +76,14 @@ def __correlation_feature_selection(
     params.fe_results_manager.set_result_for(
         pipeline_name,
         "descending_best_column_names",
-        "-".join(
+        " ".join(
             sorted_corr_sums.index.tolist()
         )
     )
     params.fe_results_manager.set_result_for(
         pipeline_name,
         "descending_best_column_values",
-        "-".join(
+        " ".join(
             str(sorted_corr_sums.values.tolist())
         )
     )

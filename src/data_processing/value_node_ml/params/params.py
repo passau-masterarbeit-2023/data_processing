@@ -65,12 +65,12 @@ class ProgramParams(BaseProgramParams):
         # save data origins on ML results manager
         self.ml_results_manager.set_result_forall(
             "training_dataset_origin",
-            "-".join([origin.value for origin in self.data_origins_training])
+            " ".join([origin.value for origin in self.data_origins_training])
         )
         if self.data_origins_testing is not None:
             self.ml_results_manager.set_result_forall(
                 "testing_dataset_origin", 
-                "-".join([origin.value for origin in self.data_origins_testing])
+                " ".join([origin.value for origin in self.data_origins_testing])
             )
         
         self.ml_results_manager.set_result_forall(
@@ -81,7 +81,7 @@ class ProgramParams(BaseProgramParams):
         # save info for FE results manager
         self.fe_results_manager.set_result_forall(
             "training_dataset_origin",
-            "-".join([origin.value for origin in self.data_origins_training])
+            " ".join([origin.value for origin in self.data_origins_training])
         )
     
     
@@ -144,7 +144,7 @@ class ProgramParams(BaseProgramParams):
             self.PROFILE = self.cli_args.args.profile
             assert isinstance(self.PROFILE, bool)
 
-
+    # result wrappers
     def save_results_to_csv(self, pipeline_name: PipelineNames):
         """
         Save results to CSV files.
@@ -153,3 +153,12 @@ class ProgramParams(BaseProgramParams):
             self.fe_results_manager.save_results_for(pipeline_name)
         else:
             self.ml_results_manager.save_results_for(pipeline_name)
+    
+    def set_result_for(self, pipeline_name: PipelineNames, column_name: str, value: str):
+        """
+        Set a result for a given pipeline.
+        """
+        if is_feature_engineering_pipeline(pipeline_name):
+            self.fe_results_manager.set_result_for(pipeline_name, column_name, value)
+        else:
+            self.ml_results_manager.set_result_for(pipeline_name, column_name, value)

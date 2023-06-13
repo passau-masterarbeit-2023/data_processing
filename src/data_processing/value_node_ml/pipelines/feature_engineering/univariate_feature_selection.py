@@ -9,21 +9,21 @@ from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
 from value_node_ml.params.params import ProgramParams
 
 
-def __compute_distance_f_test_p_val(f_values: np.ndarray, p_values: np.ndarray) -> np.ndarray:
+def __compute_distance_f_test_p_val(f_values: np.ndarray, p_values: np.ndarray):
     """
     Compute the distance between the F-test value and the p-value.
     """
     # Normalize F-test values and p-values to the range [0, 1]
-    f_values_norm = (f_values - np.min(f_values)) / (np.max(f_values) - np.min(f_values))
-    p_values_norm = (p_values - np.min(p_values)) / (np.max(p_values) - np.min(p_values))
+    f_values_norm: np.ndarray = (f_values - np.min(f_values)) / (np.max(f_values) - np.min(f_values))
+    p_values_norm: np.ndarray = (p_values - np.min(p_values)) / (np.max(p_values) - np.min(p_values))
 
     # Compute the combined importance value for each feature
-    combined_values = f_values_norm - p_values_norm
+    combined_values: np.ndarray = f_values_norm - p_values_norm
 
     # Sort the features based on the combined importance values (descending)
-    sorted_indices = np.argsort(-combined_values)
+    sorted_indices = np.argsort(-combined_values) # descending order
 
-    return sorted_indices
+    return sorted_indices, -np.sort(-combined_values) # descending order
 
 
 def __univariate_feature_selection_pipeline(
@@ -34,9 +34,10 @@ def __univariate_feature_selection_pipeline(
     """
     Pipeline for univariate feature selection.
     """
-
-    params.ml_results_manager.set_result_for(
-        PipelineNames.FE_UNIVARIATE ,"model_name", "univariate_feature_selection"
+    params.fe_results_manager.set_result_for(
+        PipelineNames.FE_UNIVARIATE ,
+        "feature_engineering_algorithm", 
+        "select_k_best"
     )
 
     # Feature selection on training set (only)
@@ -52,7 +53,7 @@ def __univariate_feature_selection_pipeline(
 
 
     # Sort the features based on F-statistic values (descending) and p-values (ascending)
-    sorted_indices = __compute_distance_f_test_p_val(f_values, p_values)
+    sorted_indices, descending_combined_values = __compute_distance_f_test_p_val(f_values, p_values)
 
     # Map the sorted indices to the names of the columns
     sorted_column_names = [column_names[i] for i in sorted_indices]
@@ -60,9 +61,21 @@ def __univariate_feature_selection_pipeline(
     # Print the sorted column names
     params.RESULTS_LOGGER.info(f"Column names sorted by (F_val, P_val) importance: [{', '.join(sorted_column_names)}]")
 
-    # TODO: evaluate the performance of the classifier with the selected features
-    #selector.fit(training_samples, training_labels)
-    #X_new = selector.transform(training_samples)
+    # keep results
+    params.fe_results_manager.set_result_for(
+        PipelineNames.FE_UNIVARIATE,
+        "descending_best_column_names",
+        " ".join(
+            [str(name) for name in sorted_column_names]
+        )
+    )
+    params.fe_results_manager.set_result_for(
+        PipelineNames.FE_UNIVARIATE,
+        "descending_best_column_values",
+        " ".join(
+            [str(value) for value in descending_combined_values]
+        )
+    )
 
 
 def univariate_feature_selection_pipeline(
