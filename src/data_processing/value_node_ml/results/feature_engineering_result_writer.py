@@ -11,6 +11,7 @@ class FeatureEngineeringResultsWriter(BaseResultWriter):
     It stores everything related to classification results.
     """
     ADDITIONAL_HEADERS: list[str] = [
+        "used_feature_columns",
         "feature_engineering_algorithm",
         "training_dataset_origin",
         "descending_best_column_names",

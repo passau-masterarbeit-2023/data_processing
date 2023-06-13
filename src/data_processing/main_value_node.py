@@ -1,17 +1,16 @@
 from datetime import datetime
 from pathlib import Path
+import pandas as pd
+
 from commons.utils.utils import DATETIME_FORMAT
 from commons.utils.results_utils import time_measure_result
-from value_node_ml.data_loading.data_types import SamplesAndLabels
+from value_node_ml.data_loading.data_types import SamplesAndLabels, get_feature_column_names
 from value_node_ml.data_loading.data_loading import load
 from commons.params.data_origin import DataOriginEnum
 from value_node_ml.params.pipeline_params import print_pipeline_names
 from value_node_ml.pipelines.pipelines import PIPELINE_NAME_TO_FUNCTION
 from value_node_ml.params.params import ProgramParams
 
-
-import cProfile
-import pandas as pd
 
 # run: python src/feature_engineering/main.py
 def main(params: ProgramParams):
@@ -66,6 +65,13 @@ def main(params: ProgramParams):
             pipeline_name,
             "pipeline_name",
             pipeline_name.value,
+        )
+
+        # information about the features used
+        params.set_result_for(
+            pipeline_name,
+            "used_feature_columns",
+            " ".join(get_feature_column_names(next(iter(origin_to_samples_and_labels.values())))),
         )
 
         # get current time using datetime
@@ -138,7 +144,7 @@ if __name__ == "__main__":
     params = ProgramParams()
 
     # run main
-    if params.PROFILE:
+    if params.PROFILING:
         profiling_main(params)
     else:
         main(params)

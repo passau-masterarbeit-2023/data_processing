@@ -11,6 +11,7 @@ class ClassificationResultsWriter(BaseResultWriter):
     It stores everything related to classification results.
     """
     ADDITIONAL_HEADERS: list[str] = [
+        "used_feature_columns",
         "data_loading_duration", 
         "data_balancing_duration",
         "balancing_type", 

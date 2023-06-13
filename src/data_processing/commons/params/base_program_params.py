@@ -39,7 +39,7 @@ class BaseProgramParams(ABC):
     SAVE_RESULT_LOGS: bool
 
     # profiling
-    PROFILE: bool
+    PROFILING: bool
     PROFILING_LOGS_DIR_PATH: str
 
     def __init__(

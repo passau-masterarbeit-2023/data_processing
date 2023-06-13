@@ -20,9 +20,11 @@ class ProgramParams(BaseProgramParams):
     cli_args: CLIArguments
     
     ### env vars
-    # NOTE: all None values NEED to be overwritten by the .env file
+    # NOTE: all CAPITAL_PARAM_VALUES values NEED to be overwritten by the .env file
+    # NOTE: lowercase values are from the CLI
 
     # data
+    columns_to_keep: set[str]
     CSV_DATA_SAMPLES_AND_LABELS_DIR_PATH: str 
 
     # results
@@ -73,7 +75,7 @@ class ProgramParams(BaseProgramParams):
                 " ".join([origin.value for origin in self.data_origins_testing])
             )
         
-        self.ml_results_manager.set_result_forall(
+        self.set_result_forall(
             "random_seed",
             str(self.RANDOM_SEED)
         )
@@ -118,7 +120,7 @@ class ProgramParams(BaseProgramParams):
             except ValueError:
                 print(f"ERROR: Invalid data origin testing: {self.cli_args.args.origins_testing}")
                 exit(1)
-            # NOTE: please, let DATA_ORIGINS_TESTING to none, such that we can split the data in the pipeline if needed.
+            # NOTE: when DATA_ORIGINS_TESTING to none, we can split the data in the pipeline if needed.
         
         if self.cli_args.args.pipelines is not None:
             try:
@@ -140,9 +142,19 @@ class ProgramParams(BaseProgramParams):
             print(f"ERROR: Invalid balancing strategy: {self.cli_args.args.balancing_strategy}")
             exit(1)
         
-        if self.cli_args.args.profile is not None:
-            self.PROFILE = self.cli_args.args.profile
-            assert isinstance(self.PROFILE, bool)
+        if self.cli_args.args.profiling is not None:
+            self.PROFILING = self.cli_args.args.profiling
+            assert isinstance(self.PROFILING, bool)
+        
+        if self.cli_args.args.columns_to_keep is not None:
+            try:
+                self.columns_to_keep = set(self.cli_args.args.columns_to_keep)
+                assert isinstance(self.columns_to_keep, set)
+            except ValueError:
+                print(f"ERROR: Invalid columns to keep: {self.cli_args.args.columns_to_keep}")
+                exit(1)
+        else:
+            self.columns_to_keep = None
 
     # result wrappers
     def save_results_to_csv(self, pipeline_name: PipelineNames):
@@ -162,3 +174,10 @@ class ProgramParams(BaseProgramParams):
             self.fe_results_manager.set_result_for(pipeline_name, column_name, value)
         else:
             self.ml_results_manager.set_result_for(pipeline_name, column_name, value)
+
+    def set_result_forall(self, column_name: str, value: str):
+        """
+        Set a result for all pipelines.
+        """
+        self.ml_results_manager.set_result_forall(column_name, value)
+        self.fe_results_manager.set_result_forall(column_name, value)

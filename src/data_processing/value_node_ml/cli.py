@@ -32,6 +32,7 @@ class CLIArguments:
             -ots origins testing
             -b balancing strategy
             -h help
+            -c columns to keep at load time, if None, keep all columns
             --profile launch profiler
         
         usage example:
@@ -83,9 +84,17 @@ class CLIArguments:
             help="Balancing strategy for training data. Possible strategies: " + str(list(map(lambda x: x.name.lower(), BalancingStrategies)))
         )
         parser.add_argument(
-            '--profile',
+            '--profiling',
             action='store_true',
             help="Launch profiler"
+        )
+        parser.add_argument(
+            '-c',
+            '--columns_to_keep',
+            type=str,
+            nargs='*',
+            default=None,
+            help="Columns to keep at load time, if None, keep all columns"
         )
 
         # save parsed arguments
