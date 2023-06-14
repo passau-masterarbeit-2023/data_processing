@@ -35,6 +35,9 @@ def evaluate(
         )
 
         # calculate the accuracy of the model
+        # NOTE: accuracy is not a good metric for imbalanced data
+        #   here, the base dataset is hugely imbalanced and composed of 99% of 0 labels
+        #   so, if the model predicts all 0 labels, it will have an accuracy of 99%...
         accuracy = accuracy_score(test_labels, y_pred)
         logger.info("Accuracy: {:.2f}%".format(accuracy * 100))
         result_saver.set_result("accuracy", str(accuracy))

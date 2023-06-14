@@ -1,8 +1,29 @@
 import pandas as pd
+from typing import Optional
 
 from value_node_ml.params.params import ProgramParams
 from value_node_ml.data_loading.data_types import SamplesAndLabels
 from commons.params.data_origin import DataOriginEnum
+from sklearn.model_selection import train_test_split
+
+
+def split_dataset_if_needed(
+    samples_and_labels_train: SamplesAndLabels, 
+    samples_and_labels_test: Optional[SamplesAndLabels]
+):
+    """
+    Split data into training and test sets if needed.
+    NOTE: Needed when no testing data is provided).
+    """
+    if samples_and_labels_test is None:
+        # Split data into training and test sets
+        __samples, __labels = samples_and_labels_train
+        X_train, X_test, y_train, y_test = train_test_split(__samples, __labels, test_size=0.2, random_state=42)
+    else:
+        X_train, y_train = samples_and_labels_train
+        X_test, y_test = samples_and_labels_test
+
+    return X_train, X_test, y_train, y_test
 
 
 def handle_data_origin(

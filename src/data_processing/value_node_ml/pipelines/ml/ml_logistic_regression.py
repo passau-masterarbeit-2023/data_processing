@@ -8,7 +8,7 @@ from commons.params.data_origin import DataOriginEnum
 from value_node_ml.data_balancing.data_balancing import apply_balancing
 from value_node_ml.data_loading.data_types import SamplesAndLabels
 from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
+from value_node_ml.pipelines.pipeline_utils import split_dataset_if_needed, split_samples_and_labels
 from value_node_ml.pipelines.feature_engineering.univariate_feature_selection import __compute_distance_f_test_p_val
 from value_node_ml.params.params import ProgramParams
 
@@ -18,54 +18,28 @@ def __ml_logistic_regression_pipeline(
         samples_and_labels_test: Optional[SamplesAndLabels],
     ) -> None:
 
-    if samples_and_labels_test is None:
-        # Split data into training and test sets
-        __samples, __labels = samples_and_labels_train
-        X_train, X_test, y_train, y_test = train_test_split(__samples, __labels, test_size=0.2, random_state=42)
-    else:
-        X_train, y_train = samples_and_labels_train
-        X_test, y_test = samples_and_labels_test
+    X_train, X_test, y_train, y_test = split_dataset_if_needed(
+        samples_and_labels_train, samples_and_labels_test
+    )
     
     # balance data
     X_train, y_train = apply_balancing(params, X_train, y_train, PipelineNames.ML_LOGISTIC_REG)
 
-    # Feature selection
-    selector = SelectKBest(f_classif, k=10)
-    X_train_transformed = selector.fit_transform(X_train, y_train)
-
-    # log selected features
-    column_names_after_selection = X_train.columns[selector.get_support()].tolist()
-    params.RESULTS_LOGGER.info(f'Selected features: {column_names_after_selection}')
-
-    f_values, p_values = selector.score_func(X_train, y_train)
-    column_names = X_train.columns.tolist()
-
     # Train classifier
     clf = LogisticRegression(n_jobs = params.MAX_ML_WORKERS)
-    clf.fit(X_train_transformed, y_train)
+    clf.fit(X_train, y_train)
     params.ml_results_manager.set_result_for(
         PipelineNames.ML_LOGISTIC_REG ,"model_name", "LogisticRegression"
     )
 
-    # Apply feature selection to test set
-    X_test_transformed = selector.transform(X_test)
-
     # Evaluate model
     evaluate(
         clf,
-        X_test_transformed,
+        X_test,
         y_test,
         params.RESULTS_LOGGER,
         params.ml_results_manager.get_result_writer_for(PipelineNames.ML_LOGISTIC_REG),
     )
-
-    # Return feature importance
-    f_values, p_values = selector.score_func(X_train, y_train)
-    sorted_indices = __compute_distance_f_test_p_val(f_values, p_values)
-    sorted_column_names = [column_names[i] for i in sorted_indices]
-    params.RESULTS_LOGGER.info(f"Column names sorted by importance: [{', '.join(sorted_column_names)}]")
-
-
 
 
 def ml_logistic_regression_pipeline(
