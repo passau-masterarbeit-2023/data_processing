@@ -4,6 +4,7 @@ import argparse
 
 from value_node_ml.params.balancing_params import BalancingStrategies
 from value_node_ml.params.pipeline_params import PipelineNames
+from value_node_ml.params.dataset_loading_params import DatasetLoadingPossibilities
 
 # wrapped program flags
 class CLIArguments:
@@ -40,7 +41,6 @@ class CLIArguments:
         """
         parser = argparse.ArgumentParser(description='Program [ARGUMENTS]')
         parser.add_argument(
-            '-d',
             '--debug', 
             action='store_true',
             help="debug, True or False"
@@ -95,6 +95,13 @@ class CLIArguments:
             nargs='*',
             default=None,
             help="Columns to keep at load time, if None, keep all columns"
+        )
+        parser.add_argument(
+            "-d",
+            "--dataset",
+            type=str,
+            default=None,
+            help="Dataset to use. Possible values: " + str(list(map(lambda x: x.name.lower(), DatasetLoadingPossibilities)))
         )
 
         # save parsed arguments

@@ -2,6 +2,7 @@ from commons.params.base_program_params import BaseProgramParams
 from commons.params.data_origin import convert_str_arg_to_data_origin
 from commons.results.base_result_manager import BaseResultsManager
 from commons.params.app_params import AppName
+from value_node_ml.params.dataset_loading_params import DatasetLoadingPossibilities, convert_str_arg_to_dataset
 from value_node_ml.results.feature_engineering_result_writer import FeatureEngineeringResultsWriter
 from value_node_ml.params.balancing_params import BalancingStrategies, convert_str_arg_to_balancing_strategy
 from value_node_ml.results.classification_result_writer import ClassificationResultsWriter
@@ -26,7 +27,8 @@ class ProgramParams(BaseProgramParams):
 
     # data
     columns_to_keep: set[str]
-    CSV_DATA_SAMPLES_AND_LABELS_DIR_PATH: str 
+    CSV_DATA_SAMPLES_AND_LABELS_DIR_PATH: str
+    DATA_STRUCTURE_DATASET_CSV_DIR_PATH: str
 
     # results
     CSV_CLASSIFICATION_RESULTS_PATH: str
@@ -156,6 +158,14 @@ class ProgramParams(BaseProgramParams):
                 exit(1)
         else:
             self.columns_to_keep = None
+        
+        if self.cli_args.args.dataset is not None:
+            try:
+                self.dataset = convert_str_arg_to_dataset(self.cli_args.args.dataset)
+                assert isinstance(self.dataset, DatasetLoadingPossibilities)
+            except ValueError:
+                print(f"ERROR: Invalid dataset: {self.cli_args.args.dataset}")
+                exit(1)
 
     # result wrappers
     def save_results_to_csv(self, pipeline_name: PipelineNames):
