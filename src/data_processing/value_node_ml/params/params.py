@@ -18,7 +18,7 @@ class ProgramParams(BaseProgramParams):
     ml_results_manager: BaseResultsManager[PipelineNames, ClassificationResultsWriter]
     fe_results_manager: BaseResultsManager[PipelineNames, FeatureEngineeringResultsWriter]
 
-    pipelines: list[PipelineNames]
+    pipelines: set[PipelineNames]
     cli_args: CLIArguments
     
     ### env vars
@@ -27,8 +27,8 @@ class ProgramParams(BaseProgramParams):
 
     # data
     columns_to_keep: set[str]
-    CSV_DATA_SAMPLES_AND_LABELS_DIR_PATH: str
-    DATA_STRUCTURE_DATASET_CSV_DIR_PATH: str
+    CSV_DATASET_SAMPLES_AND_LABELS_DIR_PATH: str
+    CSV_DATASET_DATA_STRUCTURE_DIR_PATH: str
 
     # results
     CSV_CLASSIFICATION_RESULTS_PATH: str

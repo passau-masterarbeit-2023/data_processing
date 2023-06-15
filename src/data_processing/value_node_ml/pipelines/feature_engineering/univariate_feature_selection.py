@@ -2,10 +2,10 @@ from typing import Optional
 import numpy as np
 from sklearn.feature_selection import SelectKBest, f_classif
 
-from value_node_ml.data_loading.data_types import SamplesAndLabels
+from value_node_ml.data_loading.data_types import PreprocessedData
 from value_node_ml.params.pipeline_params import PipelineNames
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
+from value_node_ml.pipelines.pipeline_utils import keep_only_samples_and_labels, split_preprocessed_data_by_origin
 from value_node_ml.params.params import ProgramParams
 
 
@@ -28,8 +28,7 @@ def __compute_distance_f_test_p_val(f_values: np.ndarray, p_values: np.ndarray):
 
 def __univariate_feature_selection_pipeline(
         params: ProgramParams, 
-        samples_and_labels_train: SamplesAndLabels,
-        samples_and_labels_test: Optional[SamplesAndLabels],
+        samples_and_labels_train: PreprocessedData,
     ) -> None:
     """
     Pipeline for univariate feature selection.
@@ -80,16 +79,21 @@ def __univariate_feature_selection_pipeline(
 
 def univariate_feature_selection_pipeline(
         params: ProgramParams, 
-        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+        origin_to_preprocessed_data: dict[DataOriginEnum, PreprocessedData]
     ) -> None:
     """
     Pipeline for feature selection.
     """
 
-    samples_and_labels_train, samples_and_labels_test, = split_samples_and_labels(
-        params, origin_to_samples_and_labels
+    preprocessed_data_train, _ = split_preprocessed_data_by_origin(
+        params, origin_to_preprocessed_data
     )
+
+    samples_and_labels_train = keep_only_samples_and_labels(preprocessed_data_train)
     
     # launch the pipeline
-    __univariate_feature_selection_pipeline(params, samples_and_labels_train, samples_and_labels_test)
+    __univariate_feature_selection_pipeline(
+        params, 
+        samples_and_labels_train
+    )
 

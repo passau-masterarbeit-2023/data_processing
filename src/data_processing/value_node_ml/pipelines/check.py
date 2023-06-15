@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.data_loading.data_types import SamplesAndLabels
+from value_node_ml.data_loading.data_types import PreprocessedData
 from value_node_ml.params.params import ProgramParams
 
 
@@ -42,7 +42,7 @@ def __check_samples_and_labels(params: ProgramParams, samples: pd.DataFrame, lab
     params.COMMON_LOGGER.info(f"✅ Checked samples and labels.")
 
 
-def check(params: ProgramParams, origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]) -> None:
+def check(params: ProgramParams, origin_to_samples_and_labels: dict[DataOriginEnum, PreprocessedData]) -> None:
     """
     Pipeline for checking the samples and labels.
     """

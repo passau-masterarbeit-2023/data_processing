@@ -4,7 +4,7 @@ import pandas as pd
 
 from commons.utils.utils import DATETIME_FORMAT
 from commons.utils.results_utils import time_measure_result
-from value_node_ml.data_loading.data_types import SamplesAndLabels, get_feature_column_names
+from value_node_ml.data_loading.data_types import PreprocessedData, get_feature_column_names
 from value_node_ml.data_loading.data_loading import load
 from commons.params.data_origin import DataOriginEnum
 from value_node_ml.params.pipeline_params import print_pipeline_names
@@ -38,7 +38,7 @@ def main(params: ProgramParams):
             exit(1)
 
     # load & clean data
-    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels] = {}
+    origin_to_preprocessed_data: dict[DataOriginEnum, PreprocessedData] = {}
 
     all_origins = params.data_origins_training
     if params.data_origins_testing is not None:
@@ -52,9 +52,8 @@ def main(params: ProgramParams):
         ):
         for data_origin in all_origins:
             print(f"Loading data from {data_origin}")
-            origin_to_samples_and_labels[data_origin] = load(
-                params, 
-                params.CSV_DATA_SAMPLES_AND_LABELS_DIR_PATH,
+            origin_to_preprocessed_data[data_origin] = load(
+                params,
                 {data_origin},
             )
     
@@ -71,7 +70,7 @@ def main(params: ProgramParams):
         params.set_result_for(
             pipeline_name,
             "used_feature_columns",
-            " ".join(get_feature_column_names(next(iter(origin_to_samples_and_labels.values())))),
+            " ".join(get_feature_column_names(next(iter(origin_to_preprocessed_data.values())))),
         )
 
         # get current time using datetime
@@ -84,8 +83,8 @@ def main(params: ProgramParams):
         # run pipeline
         pipeline_function: function[ProgramParams, pd.DataFrame, pd.Series] = PIPELINE_NAME_TO_FUNCTION[pipeline_name]
         with time_measure_result(f'pipeline ({pipeline_name})', params.RESULTS_LOGGER):
-            pipeline_function(params, origin_to_samples_and_labels)
-        
+            pipeline_function(params, origin_to_preprocessed_data)
+
         # get current time using time 
         end_time = datetime.now()
         params.set_result_for(

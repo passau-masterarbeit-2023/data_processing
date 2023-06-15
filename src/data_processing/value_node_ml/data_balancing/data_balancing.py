@@ -3,7 +3,7 @@ import pandas as pd
 from commons.utils.results_utils import time_measure_result
 from value_node_ml.params.pipeline_params import PipelineNames
 from value_node_ml.params.balancing_params import BalancingStrategies
-from value_node_ml.data_loading.data_types import SamplesAndLabels
+from value_node_ml.data_loading.data_types import PreprocessedData
 from value_node_ml.params.params import ProgramParams
 
 from imblearn.under_sampling import RandomUnderSampler
@@ -22,7 +22,7 @@ def resample_data(
     params: ProgramParams,
     samples: pd.DataFrame,
     labels: pd.Series,
-) -> SamplesAndLabels:
+) -> PreprocessedData:
     with time_measure_result(
             f'resample_data ({params.balancing_strategy})', 
             params.RESULTS_LOGGER, 
@@ -38,7 +38,7 @@ def apply_balancing(
     samples: pd.DataFrame,
     labels: pd.Series,
     pipeline_name: PipelineNames,
-) -> SamplesAndLabels:
+) -> PreprocessedData:
     """
     Get the rebalanced data.
     """    

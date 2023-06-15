@@ -6,15 +6,15 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.data_loading.data_types import SamplesAndLabels
+from value_node_ml.data_loading.data_types import PreprocessedData
 from value_node_ml.params.params import ProgramParams
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.pipelines.pipeline_utils import split_samples_and_labels
+from value_node_ml.pipelines.pipeline_utils import keep_only_samples_and_labels, split_preprocessed_data_by_origin
 from commons.utils.utils import DATETIME_FORMAT
 
 def __correlation_feature_selection(
         params: ProgramParams, 
-        samples_and_labels_train: SamplesAndLabels,
+        samples_and_labels_train: PreprocessedData,
         pipeline_name: PipelineNames,
 
     ) -> list[str]:
@@ -104,26 +104,31 @@ def __correlation_feature_selection(
 
 def __feature_engineering_correlation_measurement_pipeline(
         params: ProgramParams, 
-        origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels],
+        origin_to_preprocessed_data: dict[DataOriginEnum, PreprocessedData],
         pipeline_name: PipelineNames,
     ) -> None:
     """
     Pipeline for feature engineering correlation measurement.
     """
 
-    samples_and_labels_train, samples_and_labels_test, = split_samples_and_labels(
-        params, origin_to_samples_and_labels
+    preprocessed_data_train, _ = split_preprocessed_data_by_origin(
+        params, origin_to_preprocessed_data
     )
+
+    samples_and_labels_train = keep_only_samples_and_labels(preprocessed_data_train)
     
     # launch the pipeline
     __correlation_feature_selection(
-        params, samples_and_labels_train, pipeline_name
+        params, 
+        samples_and_labels_train,
+        pipeline_name
     )
+
 
 # pipelines functions
 def feature_engineering_correlation_measurement_pipeline_pearson(
     params: ProgramParams, 
-    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+    origin_to_samples_and_labels: dict[DataOriginEnum, PreprocessedData]
 ) -> None:
     __feature_engineering_correlation_measurement_pipeline(
         params, origin_to_samples_and_labels, PipelineNames.FE_CORR_PEARSON
@@ -131,7 +136,7 @@ def feature_engineering_correlation_measurement_pipeline_pearson(
 
 def feature_engineering_correlation_measurement_pipeline_kendall(
     params: ProgramParams, 
-    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+    origin_to_samples_and_labels: dict[DataOriginEnum, PreprocessedData]
 ) -> None:
     __feature_engineering_correlation_measurement_pipeline(
         params, origin_to_samples_and_labels, PipelineNames.FE_CORR_KENDALL
@@ -139,7 +144,7 @@ def feature_engineering_correlation_measurement_pipeline_kendall(
 
 def feature_engineering_correlation_measurement_pipeline_spearman(
     params: ProgramParams, 
-    origin_to_samples_and_labels: dict[DataOriginEnum, SamplesAndLabels]
+    origin_to_samples_and_labels: dict[DataOriginEnum, PreprocessedData]
 ) -> None:
     __feature_engineering_correlation_measurement_pipeline(
         params, origin_to_samples_and_labels, PipelineNames.FE_CORR_SPEARMAN
