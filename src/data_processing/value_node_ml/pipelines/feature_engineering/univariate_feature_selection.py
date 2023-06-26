@@ -2,10 +2,10 @@ from typing import Optional
 import numpy as np
 from sklearn.feature_selection import SelectKBest, f_classif
 
-from value_node_ml.data_loading.data_types import PreprocessedData
+from value_node_ml.data_loading.data_types import PreprocessedData, from_preprocessed_data_to_samples_and_labels
 from value_node_ml.params.pipeline_params import PipelineNames
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.pipelines.pipeline_utils import keep_only_samples_and_labels, split_preprocessed_data_by_origin
+from value_node_ml.pipelines.pipeline_utils import split_preprocessed_data_by_origin
 from value_node_ml.params.params import ProgramParams
 
 
@@ -89,7 +89,7 @@ def univariate_feature_selection_pipeline(
         params, origin_to_preprocessed_data
     )
 
-    samples_and_labels_train = keep_only_samples_and_labels(preprocessed_data_train)
+    samples_and_labels_train = from_preprocessed_data_to_samples_and_labels(preprocessed_data_train)
     
     # launch the pipeline
     __univariate_feature_selection_pipeline(

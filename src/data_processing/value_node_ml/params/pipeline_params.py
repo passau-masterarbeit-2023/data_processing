@@ -7,6 +7,7 @@ class PipelineNames(Enum):
     """
     Pipeline names.
     """
+    ########## Value node pipelines ##########
     CHECK_VN = "check_vn"
 
     # ML
@@ -19,6 +20,11 @@ class PipelineNames(Enum):
     FE_CORR_PEARSON = "fe_corr_pearson" 
     FE_CORR_KENDALL = "fe_corr_kendall"
     FE_CORR_SPEARMAN = "fe_corr_spearman"
+
+    ########## Data structure pipelines ##########
+    # clustering
+    DS_DENSITY_CLUSTERING = "ds_density_clustering"
+
 
 def is_feature_engineering_pipeline(pipeline_name: PipelineNames):
     """
@@ -55,7 +61,7 @@ def is_datastructure_ml_pipeline(pipeline_name: PipelineNames):
     Data structure pipelines expect data structure dataset.
     """
     return pipeline_name in [
-        
+        PipelineNames.DS_DENSITY_CLUSTERING,
     ]    
 
 

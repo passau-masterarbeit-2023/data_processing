@@ -6,10 +6,10 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.data_loading.data_types import PreprocessedData
+from value_node_ml.data_loading.data_types import PreprocessedData, from_preprocessed_data_to_samples_and_labels
 from value_node_ml.params.params import ProgramParams
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.pipelines.pipeline_utils import keep_only_samples_and_labels, split_preprocessed_data_by_origin
+from value_node_ml.pipelines.pipeline_utils import split_preprocessed_data_by_origin
 from commons.utils.utils import DATETIME_FORMAT
 
 def __correlation_feature_selection(
@@ -115,7 +115,7 @@ def __feature_engineering_correlation_measurement_pipeline(
         params, origin_to_preprocessed_data
     )
 
-    samples_and_labels_train = keep_only_samples_and_labels(preprocessed_data_train)
+    samples_and_labels_train = from_preprocessed_data_to_samples_and_labels(preprocessed_data_train)
     
     # launch the pipeline
     __correlation_feature_selection(

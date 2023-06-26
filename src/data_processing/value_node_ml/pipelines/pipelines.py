@@ -5,6 +5,7 @@ from value_node_ml.pipelines.ml.ml_logistic_regression import ml_logistic_regres
 from value_node_ml.pipelines.check import check
 from value_node_ml.pipelines.ml.ml_random_forest import ml_random_forest_pipeline
 from value_node_ml.pipelines.feature_engineering.correlation_feature_selection import *
+from value_node_ml.pipelines.data_structure_clustering.density_clustering import density_clustering_pipeline
 
 PIPELINE_NAME_TO_FUNCTION = {
     PipelineNames.CHECK_VN : check,
@@ -15,4 +16,5 @@ PIPELINE_NAME_TO_FUNCTION = {
     PipelineNames.FE_CORR_PEARSON: feature_engineering_correlation_measurement_pipeline_pearson,
     PipelineNames.FE_CORR_KENDALL: feature_engineering_correlation_measurement_pipeline_kendall,
     PipelineNames.FE_CORR_SPEARMAN: feature_engineering_correlation_measurement_pipeline_spearman,
+    PipelineNames.DS_DENSITY_CLUSTERING: density_clustering_pipeline,
 }

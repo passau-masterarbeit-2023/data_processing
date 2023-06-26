@@ -69,13 +69,3 @@ def split_preprocessed_data_by_origin(
     return preprocessed_data_train, preprocessed_data_test
 
 
-def keep_only_samples_and_labels(
-    preprocessed_data: Optional[PreprocessedData]
-):
-    """
-    Keep only the samples and labels from the preprocessed data.
-    """
-    if preprocessed_data is not None:
-        return preprocessed_data[0], preprocessed_data[2]
-    else:
-        return None
