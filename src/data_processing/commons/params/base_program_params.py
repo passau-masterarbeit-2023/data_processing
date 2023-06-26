@@ -78,7 +78,6 @@ class BaseProgramParams(ABC):
         self.__check_all_paths()
 
         self.__construct_log()
-        self.__log_program_params()
 
     
     def __init_default_values(self):
@@ -91,6 +90,51 @@ class BaseProgramParams(ABC):
         self.RESULTS_LOGGER = logging.getLogger("results_logger")
 
         self.data_origins_testing = None
+    
+
+    def __get_all_class_attribute_annotations(self):
+        """
+        Get all class attributes (annotations in Python).
+        """
+        # PYTHON MAGIC to get all the class variables
+        all_annotations = {}
+
+        # Iterate through the classes in the MRO in reverse order
+        for cls in reversed(self.__class__.mro()):
+            # Skip 'object', which has no annotations
+            if cls is object:
+                continue
+            
+            # Update the dictionary with the annotations from this class
+            all_annotations.update(cls.__dict__.get('__annotations__', {}))
+
+        # Now, 'all_annotations' should contain annotations from both the base and child classes.
+        return all_annotations
+
+    def __get_value_for_class_attribute(self, attribute_name: str):
+        """
+        Get the value for a given class attribute.
+        NOTE: We need to define it since in python, the 'getattr' function
+        only works for the last child class.
+        """
+
+        # Check if the attribute is in the instance dictionary (current class)
+        if attribute_name in self.__dict__:
+            return self.__dict__[attribute_name]
+
+        # Iterate through the classes in the MRO in reverse order
+        for cls in reversed(self.__class__.mro()):
+            # Skip 'object', which has no attributes
+            if cls is object:
+                continue
+
+            # Check if the class has the attribute
+            if attribute_name in cls.__dict__:
+                # Return the attribute value
+                return cls.__dict__[attribute_name]
+
+        # Raise an AttributeError if the attribute was not found
+        raise AttributeError(f"{self.__class__.__name__} object has no attribute '{attribute_name}'")
 
     
     def __load_env(self):
@@ -112,20 +156,9 @@ class BaseProgramParams(ABC):
         # Load environment variables from .env file
         dotenv.load_dotenv(dotenv_path=self.PROJECT_BASE_DIR + ".env")
 
-        # PYTHON MAGIC to get all the class variables
-        all_annotations = {}
-
-        # Iterate through the classes in the MRO in reverse order
-        for cls in reversed(self.__class__.mro()):
-            # Skip 'object', which has no annotations
-            if cls is object:
-                continue
-            
-            # Update the dictionary with the annotations from this class
-            all_annotations.update(cls.__dict__.get('__annotations__', {}))
-
-        # Now, 'all_annotations' should contain annotations from both the base and child classes.
-
+        # get all class attributes (annotations in Python)
+        all_annotations = self.__get_all_class_attribute_annotations()
+        
         # Overwrite default values with values from .env file if they are defined there
         # NOTE: cls.__annotations__ is a dictionary where the keys are the names of 
         #   the class variables and the values are their types
@@ -234,8 +267,12 @@ class BaseProgramParams(ABC):
 
         # Result logger using file handler
         if self.SAVE_RESULT_LOGS:
+            # when using results logger, do:
             check_and_create_directory(self.RESULTS_LOGGER_DIR_PATH + self.app_name.value)
             results_log_file_path = self.RESULTS_LOGGER_DIR_PATH + self.app_name.value + "/" + datetime2str(datetime.now()) + "_results.log"
+        
+            # inform user of the results logger path
+            self.COMMON_LOGGER.info("⚓ Results logger path: %s" % results_log_file_path) 
         else:
             results_log_file_path = common_log_file_path
         results_log_file_handler = logging.FileHandler(results_log_file_path)
@@ -248,14 +285,23 @@ class BaseProgramParams(ABC):
         results_log_console_handler.setLevel(logging.DEBUG)
         results_log_console_handler.setFormatter(common_formatter)
         self.RESULTS_LOGGER.addHandler(results_log_console_handler)
+
     
-    def __log_program_params(self):
+    def _log_program_params(self):
         """
         Log given program arguments.
+        WARN: Must be CALLED LAST, manually in the child class, at the end of the __init__().
         """
-        self.RESULTS_LOGGER.info("Program params:   [see below]")
-        # complete list of program params below
-        self.RESULTS_LOGGER.info("\tdebug: %s" % self.DEBUG)
-        self.RESULTS_LOGGER.info("\tmax_ml_workers: %s" % self.MAX_ML_WORKERS)
+        # get all class attributes (annotations in Python)
+        all_annotations = self.__get_all_class_attribute_annotations()
+
+        # log program params
+        # NOTE: cls.__annotations__ is a dictionary where the keys are the names of 
+        #   the class variables and the values are their types
+        self.RESULTS_LOGGER.info("########## Program params:   [see below] ##########")
+        for variable_name in all_annotations.keys():
+            variable_value = self.__get_value_for_class_attribute(variable_name)
+            self.RESULTS_LOGGER.info("%s: %s" % (variable_name, variable_value))
+        self.RESULTS_LOGGER.info("########## Program params:   [see above] ##########")
 
 

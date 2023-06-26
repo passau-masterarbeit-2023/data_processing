@@ -47,13 +47,16 @@ class ProgramParams(BaseProgramParams):
             debug : bool = False,
             **kwargs
     ):
-        super().__init__(AppName.VALUE_NODE_ML, load_program_argv, debug)
+        super().__init__(AppName.FEATURE_EMBEDDING_ML, load_program_argv, debug)
 
         # cheking stage
         self.__check_params_relevance()
 
         # keep results
         self.__results_manager_init()
+
+        # to be done last
+        self._log_program_params()
     
     def __results_manager_init(self):
         """
