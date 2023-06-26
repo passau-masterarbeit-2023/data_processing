@@ -2,11 +2,11 @@ from commons.params.base_program_params import BaseProgramParams
 from commons.params.data_origin import convert_str_arg_to_data_origin
 from commons.results.base_result_manager import BaseResultsManager
 from commons.params.app_params import AppName
-from value_node_ml.params.dataset_loading_params import DatasetLoadingPossibilities, convert_str_arg_to_dataset
+from value_node_ml.params.dataset_loading_params import DatasetLoadingPossibilities, check_data_structure_dataset_params, check_value_node_dataset_params, convert_str_arg_to_dataset
 from value_node_ml.results.feature_engineering_result_writer import FeatureEngineeringResultsWriter
 from value_node_ml.params.balancing_params import BalancingStrategies, convert_str_arg_to_balancing_strategy
 from value_node_ml.results.classification_result_writer import ClassificationResultsWriter
-from value_node_ml.params.pipeline_params import PipelineNames, convert_str_arg_to_pipeline_name, is_feature_engineering_pipeline
+from value_node_ml.params.pipeline_params import PipelineNames, convert_str_arg_to_pipeline_name, is_datastructure_ml_pipeline, is_feature_engineering_pipeline, is_value_node_ml_pipeline
 from value_node_ml.results.classification_result_writer import ClassificationResultsWriter
 from ..cli import CLIArguments
 
@@ -48,6 +48,9 @@ class ProgramParams(BaseProgramParams):
             **kwargs
     ):
         super().__init__(AppName.VALUE_NODE_ML, load_program_argv, debug)
+
+        # cheking stage
+        self.__check_params_relevance()
 
         # keep results
         self.__results_manager_init()
@@ -166,6 +169,19 @@ class ProgramParams(BaseProgramParams):
             except ValueError:
                 print(f"ERROR: Invalid dataset: {self.cli_args.args.dataset}")
                 exit(1)
+    
+    
+    def __check_params_relevance(self):
+        """
+        Some parameters are only relevant when used with other parameters.
+        Some parameter values should not be used when other parameters are used.
+        The following function check the relevance of the parameters.
+        """
+        for pipeline in self.pipelines:
+            if is_value_node_ml_pipeline(pipeline):
+                check_value_node_dataset_params(self.dataset)
+            elif is_datastructure_ml_pipeline(pipeline):
+                check_data_structure_dataset_params(self.dataset)
 
     # result wrappers
     def save_results_to_csv(self, pipeline_name: PipelineNames):

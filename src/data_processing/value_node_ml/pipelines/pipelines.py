@@ -7,7 +7,7 @@ from value_node_ml.pipelines.ml.ml_random_forest import ml_random_forest_pipelin
 from value_node_ml.pipelines.feature_engineering.correlation_feature_selection import *
 
 PIPELINE_NAME_TO_FUNCTION = {
-    PipelineNames.CHECK : check,
+    PipelineNames.CHECK_VN : check,
     PipelineNames.FE_UNIVARIATE : univariate_feature_selection_pipeline,
     PipelineNames.ML_LOGISTIC_REG : ml_logistic_regression_pipeline,
     PipelineNames.ML_RANDOM_FOREST : ml_random_forest_pipeline,

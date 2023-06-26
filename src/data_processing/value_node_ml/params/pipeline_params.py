@@ -7,7 +7,7 @@ class PipelineNames(Enum):
     """
     Pipeline names.
     """
-    CHECK = "check"
+    CHECK_VN = "check_vn"
 
     # ML
     ML_LOGISTIC_REG = "ml_logistic_reg"
@@ -30,6 +30,34 @@ def is_feature_engineering_pipeline(pipeline_name: PipelineNames):
         PipelineNames.FE_CORR_KENDALL,
         PipelineNames.FE_CORR_SPEARMAN,
     ]
+
+def is_value_node_ml_pipeline(pipeline_name: PipelineNames):
+    """
+    Value node pipelines expect value node dataset.
+    """
+    return pipeline_name in [
+        PipelineNames.CHECK_VN,
+
+        # ML
+        PipelineNames.ML_LOGISTIC_REG,
+        PipelineNames.ML_RANDOM_FOREST,
+        PipelineNames.ML_SGD,
+
+        # feature engineering
+        PipelineNames.FE_UNIVARIATE,
+        PipelineNames.FE_CORR_PEARSON,
+        PipelineNames.FE_CORR_KENDALL,
+        PipelineNames.FE_CORR_SPEARMAN,
+    ]
+
+def is_datastructure_ml_pipeline(pipeline_name: PipelineNames):
+    """
+    Data structure pipelines expect data structure dataset.
+    """
+    return pipeline_name in [
+        
+    ]    
+
 
 def print_pipeline_names():
     """
