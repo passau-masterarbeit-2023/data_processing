@@ -1,9 +1,9 @@
 from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.pipelines.ml.ml_sgd import ml_sgd_pipeline
+from value_node_ml.pipelines.classification.ml_sgd import ml_sgd_pipeline
 from value_node_ml.pipelines.feature_engineering.univariate_feature_selection import univariate_feature_selection_pipeline
-from value_node_ml.pipelines.ml.ml_logistic_regression import ml_logistic_regression_pipeline
+from value_node_ml.pipelines.classification.ml_logistic_regression import ml_logistic_regression_pipeline
 from value_node_ml.pipelines.check import check
-from value_node_ml.pipelines.ml.ml_random_forest import ml_random_forest_pipeline
+from value_node_ml.pipelines.classification.ml_random_forest import ml_random_forest_pipeline
 from value_node_ml.pipelines.feature_engineering.correlation_feature_selection import *
 from value_node_ml.pipelines.data_structure_clustering.density_clustering import density_clustering_pipeline
 

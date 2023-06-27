@@ -95,7 +95,7 @@ def __correlation_feature_selection(
     
     params.COMMON_LOGGER.info(f"Keeping columns: {best_columns_names}")
 
-    assert len(best_columns_names) == params.FEATURE_ENGINEERING_NB_KEEP_BEST_COLUMNS
+    assert len(best_columns_names) == params.FEATURE_ENGINEERING_NB_KEEP_BEST_COLUMNS, "The number of best columns is not correct, it should be equal to FEATURE_ENGINEERING_NB_KEEP_BEST_COLUMNS. Maybe there are not enough columns in the dataset."
     assert (type(best_columns_names) == list) and (type(best_columns_names[0]) == str)
 
     # return the best columns names

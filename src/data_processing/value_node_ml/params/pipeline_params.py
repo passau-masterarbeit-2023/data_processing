@@ -7,6 +7,13 @@ class PipelineNames(Enum):
     """
     Pipeline names.
     """
+    ##########common pipelines ##########
+    # feature engineering
+    FE_UNIVARIATE = "fe_univariate"
+    FE_CORR_PEARSON = "fe_corr_pearson" 
+    FE_CORR_KENDALL = "fe_corr_kendall"
+    FE_CORR_SPEARMAN = "fe_corr_spearman"
+
     ########## Value node pipelines ##########
     CHECK_VN = "check_vn"
 
@@ -14,12 +21,6 @@ class PipelineNames(Enum):
     ML_LOGISTIC_REG = "ml_logistic_reg"
     ML_RANDOM_FOREST = "ml_random_forest"
     ML_SGD = "ml_sgd"
-
-    # feature engineering
-    FE_UNIVARIATE = "fe_univariate"
-    FE_CORR_PEARSON = "fe_corr_pearson" 
-    FE_CORR_KENDALL = "fe_corr_kendall"
-    FE_CORR_SPEARMAN = "fe_corr_spearman"
 
     ########## Data structure pipelines ##########
     # clustering
@@ -48,12 +49,6 @@ def is_value_node_ml_pipeline(pipeline_name: PipelineNames):
         PipelineNames.ML_LOGISTIC_REG,
         PipelineNames.ML_RANDOM_FOREST,
         PipelineNames.ML_SGD,
-
-        # feature engineering
-        PipelineNames.FE_UNIVARIATE,
-        PipelineNames.FE_CORR_PEARSON,
-        PipelineNames.FE_CORR_KENDALL,
-        PipelineNames.FE_CORR_SPEARMAN,
     ]
 
 def is_datastructure_ml_pipeline(pipeline_name: PipelineNames):

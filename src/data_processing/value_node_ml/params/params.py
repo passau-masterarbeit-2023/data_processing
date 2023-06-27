@@ -181,10 +181,12 @@ class ProgramParams(BaseProgramParams):
         The following function check the relevance of the parameters.
         """
         for pipeline in self.pipelines:
-            if is_value_node_ml_pipeline(pipeline):
-                check_value_node_dataset_params(self.dataset)
-            elif is_datastructure_ml_pipeline(pipeline):
-                check_data_structure_dataset_params(self.dataset)
+            # NOTE: feature engineering pipelines are common to both data structures and value nodes
+            if not is_feature_engineering_pipeline(pipeline):
+                if is_value_node_ml_pipeline(pipeline):
+                    check_value_node_dataset_params(self.dataset)
+                elif is_datastructure_ml_pipeline(pipeline):
+                    check_data_structure_dataset_params(self.dataset)
 
     # result wrappers
     def save_results_to_csv(self, pipeline_name: PipelineNames):
