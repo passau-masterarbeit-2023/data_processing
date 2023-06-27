@@ -7,6 +7,22 @@ from sklearn.metrics import confusion_matrix, roc_curve, auc
 from commons.results.base_result_writer import BaseResultWriter
 from ..results_utils import time_measure_result
 
+def __get_predicted_classes_from_report(clf_report: dict) -> list:
+    """
+    Return the classes from the classification report.
+    """
+    # Create a list to hold the classes
+    classes = []
+    # Iterate over the keys in the classification report
+    for key in clf_report.keys():
+        # Ignore the 'accuracy', 'macro avg' and 'weighted avg' keys,
+        # as these are not classes
+        if key not in ['accuracy', 'macro avg', 'weighted avg']:
+            # Append the class (as an integer) to the classes list
+            classes.append(int(key))
+    # Return the classes list
+    return classes
+
 
 def evaluate(
         clf: Any, 
@@ -50,10 +66,21 @@ def evaluate(
 
         # Save classification report metrics
         # TODO: not sure about the 1 here, need to check
-        result_saver.set_result("precision", str(clf_report['1']['precision']))
-        result_saver.set_result("recall", str(clf_report['1']['recall']))
-        result_saver.set_result("f1_score", str(clf_report['1']['f1-score']))
-        result_saver.set_result("support", str(clf_report['1']['support']))
+        precision_str = ""
+        recall_str = ""
+        f1_score_str = ""
+        support_str = ""
+        for predicted_class in __get_predicted_classes_from_report(clf_report):
+            precision_str += "class-" + str(predicted_class) + "_" + str(clf_report[str(predicted_class)]['precision']) + " "
+            recall_str += "class-" + str(predicted_class) + "_" + str(clf_report[str(predicted_class)]['recall']) + " "
+            f1_score_str += "class-" +str(predicted_class) + "_" + str(clf_report[str(predicted_class)]['f1-score']) + " "
+            support_str += "class-" + str(predicted_class) + "_" + str(clf_report[str(predicted_class)]['support']) + " "
+        
+        result_saver.set_result("precision", precision_str)
+        result_saver.set_result("recall", recall_str)
+        result_saver.set_result("f1_score", f1_score_str)
+        result_saver.set_result("support", support_str)
+
 
         # calculate the confusion matrix
         cm = confusion_matrix(test_labels, y_pred)
