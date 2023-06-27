@@ -267,13 +267,6 @@ def separate_str_columns_from_features(
     They should NOT be used for training, fearure engineering, etc.
     """
 
-    # Get the columns that contain strings
-    # WARN: dtype 'str' is not supported by pandas, so we use 'object' instead
-    str_columns = samples.select_dtypes(include='object').columns
-
-    # Separate the string columns from the features and labels
-    samples_str_columns = samples[str_columns]
-
     # We want to be able to find back the string columns of a given sample
     # for this, we need to hash every row of non-string columns,
     # and store the hash as a new column (hash_id) in the dataframe of string columns
@@ -284,9 +277,17 @@ def separate_str_columns_from_features(
     non_str_columns = samples.select_dtypes(exclude='object').columns
 
     # Compute a hash for each row of non-string columns
-    samples_str_columns['hash_id'] = samples[non_str_columns].apply(
+    hash_id_column = "hash_id"
+    samples.loc[:, hash_id_column] = samples[non_str_columns].apply(
         lambda row: compute_feature_vector_hash_id(row), axis=1
     )
+
+    # Get the columns that contain strings
+    # WARN: dtype 'str' is not supported by pandas, so we use 'object' instead
+    str_columns = samples.select_dtypes(include='object').columns
+
+    # Separate the string columns from the features and labels
+    samples_str_columns = samples[list(str_columns) + [hash_id_column]]
 
     # Drop the string columns from the original samples DataFrame
     samples = samples.drop(columns=str_columns)
