@@ -5,7 +5,7 @@
 
 
 
-from commons.params.data_origin import DataOriginEnum
+from processing_pipelines.params.data_origin import DataOriginEnum
 from processing_pipelines.data_loading.data_types import PreprocessedData, SamplesAndSamplesStr, from_preprocessed_data_to_samples_and_labels
 from processing_pipelines.pipelines.pipeline_utils import split_preprocessed_data_by_origin
 from processing_pipelines.params.params import ProgramParams

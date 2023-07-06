@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from commons.params.app_params import AppName # for abstract classes
-from .data_origin import DataOriginEnum
+
 from commons.utils.utils import DATETIME_FORMAT, check_and_create_directory, datetime2str
 
 import dotenv
@@ -20,9 +20,7 @@ class BaseProgramParams(ABC):
     """
     app_name: AppName
 
-    ### cli args
-    data_origins_training: set[DataOriginEnum]
-    data_origins_testing: set[DataOriginEnum]
+    
     
     ### env vars
     # NOTE: all None values NEED to be overwritten by the .env file
@@ -41,15 +39,12 @@ class BaseProgramParams(ABC):
     RESULTS_LOGGER: logging.Logger
     SAVE_RESULT_LOGS: bool
 
-    # profiling
-    PROFILING: bool
-    PROFILING_LOGS_DIR_PATH: str
-
     def __init__(
             self, 
             app_name: AppName,
             load_program_argv : bool = True, 
             debug : bool = False,
+            dotenv_path: str = None,
             **kwargs
     ):
         """
@@ -74,7 +69,7 @@ class BaseProgramParams(ABC):
             self.DEBUG = debug
             self.SAVE_RESULT_LOGS = False
 
-        self.__load_env()
+        self.__load_env(dotenv_path)
         self.__check_all_paths()
 
         self.__construct_log()
@@ -137,7 +132,7 @@ class BaseProgramParams(ABC):
         raise AttributeError(f"{self.__class__.__name__} object has no attribute '{attribute_name}'")
 
     
-    def __load_env(self):
+    def __load_env(self, dotenv_path: str | None):
         """
         Load environment variables from .env file.
         Overwrite default values with values from .env file if they are defined there.
@@ -154,7 +149,9 @@ class BaseProgramParams(ABC):
 
 
         # Load environment variables from .env file
-        dotenv.load_dotenv(dotenv_path=self.PROJECT_BASE_DIR + ".env")
+        if dotenv_path is None:
+            dotenv_path = self.PROJECT_BASE_DIR + ".env"
+        dotenv.load_dotenv(dotenv_path)
 
         # get all class attributes (annotations in Python)
         all_annotations = self.__get_all_class_attribute_annotations()

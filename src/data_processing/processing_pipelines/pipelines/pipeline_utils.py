@@ -3,7 +3,7 @@ from typing import Optional, Any
 
 from processing_pipelines.params.params import ProgramParams
 from processing_pipelines.data_loading.data_types import PreprocessedData
-from commons.params.data_origin import DataOriginEnum
+from processing_pipelines.params.data_origin import DataOriginEnum
 from sklearn.model_selection import train_test_split
 
 

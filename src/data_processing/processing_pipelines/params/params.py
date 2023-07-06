@@ -1,5 +1,5 @@
 from commons.params.base_program_params import BaseProgramParams
-from commons.params.data_origin import convert_str_arg_to_data_origin
+from processing_pipelines.params.data_origin import convert_str_arg_to_data_origin
 from commons.results.base_result_manager import BaseResultsManager
 from commons.params.app_params import AppName
 from processing_pipelines.params.dataset_loading_params import DatasetLoadingPossibilities, check_data_structure_dataset_params, check_value_node_dataset_params, convert_str_arg_to_dataset
@@ -9,7 +9,7 @@ from processing_pipelines.results.classification_result_writer import Classifica
 from processing_pipelines.params.pipeline_params import PipelineNames, convert_str_arg_to_pipeline_name, is_datastructure_ml_pipeline, is_feature_engineering_pipeline, is_value_node_ml_pipeline
 from processing_pipelines.results.classification_result_writer import ClassificationResultsWriter
 from ..cli import CLIArguments
-
+from .data_origin import DataOriginEnum
 
 class ProgramParams(BaseProgramParams):
     """
@@ -19,7 +19,11 @@ class ProgramParams(BaseProgramParams):
     fe_results_manager: BaseResultsManager[PipelineNames, FeatureEngineeringResultsWriter]
 
     pipelines: set[PipelineNames]
+
+    ### cli args
     cli_args: CLIArguments
+    data_origins_training: set[DataOriginEnum]
+    data_origins_testing: set[DataOriginEnum]
     
     ### env vars
     # NOTE: all CAPITAL_PARAM_VALUES values NEED to be overwritten by the .env file
@@ -40,6 +44,10 @@ class ProgramParams(BaseProgramParams):
 
     # feature engineering
     FEATURE_ENGINEERING_NB_KEEP_BEST_COLUMNS: int
+
+    # profiling
+    profiling: bool
+    PROFILING_LOGS_DIR_PATH: str
 
     def __init__(
             self, 
@@ -152,8 +160,8 @@ class ProgramParams(BaseProgramParams):
             exit(1)
         
         if self.cli_args.args.profiling is not None:
-            self.PROFILING = self.cli_args.args.profiling
-            assert isinstance(self.PROFILING, bool)
+            self.profiling = self.cli_args.args.profiling
+            assert isinstance(self.profiling, bool)
         
         if self.cli_args.args.columns_to_keep is not None:
             try:

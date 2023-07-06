@@ -10,7 +10,7 @@ import hashlib
 from processing_pipelines.data_loading.data_cleaning import clean
 from processing_pipelines.data_loading.data_types import PreprocessedData
 from commons.utils.data_utils import count_positive_and_negative_labels
-from commons.params.data_origin import DataOriginEnum
+from processing_pipelines.params.data_origin import DataOriginEnum
 from processing_pipelines.params.params import ProgramParams
 from processing_pipelines.params.dataset_loading_params import DatasetLoadingPossibilities
 

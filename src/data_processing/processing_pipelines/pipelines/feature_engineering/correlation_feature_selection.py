@@ -8,7 +8,7 @@ import pandas as pd
 from processing_pipelines.params.pipeline_params import PipelineNames
 from processing_pipelines.data_loading.data_types import PreprocessedData, from_preprocessed_data_to_samples_and_labels
 from processing_pipelines.params.params import ProgramParams
-from commons.params.data_origin import DataOriginEnum
+from processing_pipelines.params.data_origin import DataOriginEnum
 from processing_pipelines.pipelines.pipeline_utils import split_preprocessed_data_by_origin
 from commons.utils.utils import DATETIME_FORMAT
 

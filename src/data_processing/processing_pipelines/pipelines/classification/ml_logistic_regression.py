@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 
 from commons.utils.ml_utils.ml_evaluate import evaluate
-from commons.params.data_origin import DataOriginEnum
+from processing_pipelines.params.data_origin import DataOriginEnum
 from processing_pipelines.data_balancing.data_balancing import apply_balancing
 from processing_pipelines.data_loading.data_types import PreprocessedData, from_preprocessed_data_to_samples_and_labels
 from processing_pipelines.params.pipeline_params import PipelineNames

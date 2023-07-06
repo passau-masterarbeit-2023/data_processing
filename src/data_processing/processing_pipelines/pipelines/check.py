@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from commons.params.data_origin import DataOriginEnum
+from processing_pipelines.params.data_origin import DataOriginEnum
 from processing_pipelines.data_loading.data_types import PreprocessedData
 from processing_pipelines.params.params import ProgramParams
 
