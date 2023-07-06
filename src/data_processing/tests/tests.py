@@ -2,7 +2,7 @@
 File used for internal testing variables and functions.
 """
 
-from value_node_ml.params.params import ProgramParams
+from processing_pipelines.params.params import ProgramParams
 
 class TestParams(ProgramParams):
 

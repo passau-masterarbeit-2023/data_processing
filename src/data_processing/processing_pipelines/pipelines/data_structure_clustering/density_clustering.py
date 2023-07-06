@@ -6,9 +6,9 @@
 
 
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.data_loading.data_types import PreprocessedData, SamplesAndSamplesStr, from_preprocessed_data_to_samples_and_labels
-from value_node_ml.pipelines.pipeline_utils import split_preprocessed_data_by_origin
-from value_node_ml.params.params import ProgramParams
+from processing_pipelines.data_loading.data_types import PreprocessedData, SamplesAndSamplesStr, from_preprocessed_data_to_samples_and_labels
+from processing_pipelines.pipelines.pipeline_utils import split_preprocessed_data_by_origin
+from processing_pipelines.params.params import ProgramParams
 
 from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score

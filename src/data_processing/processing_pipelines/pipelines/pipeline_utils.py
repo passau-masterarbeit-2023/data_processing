@@ -1,8 +1,8 @@
 import pandas as pd
 from typing import Optional, Any
 
-from value_node_ml.params.params import ProgramParams
-from value_node_ml.data_loading.data_types import PreprocessedData
+from processing_pipelines.params.params import ProgramParams
+from processing_pipelines.data_loading.data_types import PreprocessedData
 from commons.params.data_origin import DataOriginEnum
 from sklearn.model_selection import train_test_split
 

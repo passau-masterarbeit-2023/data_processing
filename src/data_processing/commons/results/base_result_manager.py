@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Optional
-from value_node_ml.params.pipeline_params import PipelineNames
+from processing_pipelines.params.pipeline_params import PipelineNames
 from .base_result_writer import BaseResultWriter
 
 from typing import TypeVar, Generic, Type

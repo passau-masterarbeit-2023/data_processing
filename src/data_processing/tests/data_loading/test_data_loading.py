@@ -1,5 +1,5 @@
 
-from value_node_ml.data_loading.data_loading import __load_samples_and_labels_from_csv
+from processing_pipelines.data_loading.data_loading import __load_samples_and_labels_from_csv
 from commons.utils.data_utils import count_positive_and_negative_labels
 from tests.tests import init_test
 

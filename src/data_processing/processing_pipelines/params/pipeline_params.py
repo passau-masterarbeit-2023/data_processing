@@ -7,7 +7,7 @@ class PipelineNames(Enum):
     """
     Pipeline names.
     """
-    ##########common pipelines ##########
+    ########## common pipelines ##########
     # feature engineering
     FE_UNIVARIATE = "fe_univariate"
     FE_CORR_PEARSON = "fe_corr_pearson" 

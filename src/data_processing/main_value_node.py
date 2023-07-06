@@ -4,12 +4,12 @@ import pandas as pd
 
 from commons.utils.utils import DATETIME_FORMAT
 from commons.utils.results_utils import time_measure_result
-from value_node_ml.data_loading.data_types import PreprocessedData, get_feature_column_names
-from value_node_ml.data_loading.data_loading import load
+from processing_pipelines.data_loading.data_types import PreprocessedData, get_feature_column_names
+from processing_pipelines.data_loading.data_loading import load
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.params.pipeline_params import print_pipeline_names
-from value_node_ml.pipelines.pipelines import PIPELINE_NAME_TO_FUNCTION
-from value_node_ml.params.params import ProgramParams
+from processing_pipelines.params.pipeline_params import print_pipeline_names
+from processing_pipelines.pipelines.pipelines import PIPELINE_NAME_TO_FUNCTION
+from processing_pipelines.params.params import ProgramParams
 
 
 # run: python src/feature_engineering/main.py

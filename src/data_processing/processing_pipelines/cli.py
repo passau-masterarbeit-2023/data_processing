@@ -2,7 +2,9 @@
 import sys
 import argparse
 
-from value_node_ml.params.pipeline_params import PipelineNames
+from processing_pipelines.params.balancing_params import BalancingStrategies
+from processing_pipelines.params.pipeline_params import PipelineNames
+from processing_pipelines.params.dataset_loading_params import DatasetLoadingPossibilities
 
 # wrapped program flags
 class CLIArguments:
@@ -29,18 +31,18 @@ class CLIArguments:
             -p pipelines
             -otr origins training
             -ots origins testing
-            -b use data batch
+            -b balancing strategy
             -h help
+            -c columns to keep at load time, if None, keep all columns
+            --profile launch profiler
         
         usage example:
             python3 main.py -m GRID_SEARCH_CV -b OVER -t /home/onyr/Documents/code/phdtrack/phdtrack_data/Training/Training/scp/V_7_8_P1/16 -e /home/onyr/Documents/code/phdtrack/phdtrack_data/Validation/Validation/scp/V_7_8_P1/16 -d False -v 2
         """
         parser = argparse.ArgumentParser(description='Program [ARGUMENTS]')
         parser.add_argument(
-            '-d',
             '--debug', 
-            type=bool, 
-            default=None,
+            action='store_true',
             help="debug, True or False"
         )
         parser.add_argument(
@@ -76,9 +78,30 @@ class CLIArguments:
         )
         parser.add_argument(
             '-b',
-            '--batch',
+            '--balancing_strategy',
+            type=str,
+            default=None,
+            help="Balancing strategy for training data. Possible strategies: " + str(list(map(lambda x: x.name.lower(), BalancingStrategies)))
+        )
+        parser.add_argument(
+            '--profiling',
             action='store_true',
-            help="Use data batch for lazy data loading"
+            help="Launch profiler"
+        )
+        parser.add_argument(
+            '-c',
+            '--columns_to_keep',
+            type=str,
+            nargs='*',
+            default=None,
+            help="Columns to keep at load time, if None, keep all columns"
+        )
+        parser.add_argument(
+            "-d",
+            "--dataset",
+            type=str,
+            default=None,
+            help="Dataset to use. Possible values: " + str(list(map(lambda x: x.name.lower(), DatasetLoadingPossibilities)))
         )
 
         # save parsed arguments

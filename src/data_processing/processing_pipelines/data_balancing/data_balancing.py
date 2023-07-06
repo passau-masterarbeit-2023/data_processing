@@ -1,10 +1,10 @@
 import pandas as pd
 
 from commons.utils.results_utils import time_measure_result
-from value_node_ml.params.pipeline_params import PipelineNames
-from value_node_ml.params.balancing_params import BalancingStrategies
-from value_node_ml.data_loading.data_types import PreprocessedData
-from value_node_ml.params.params import ProgramParams
+from processing_pipelines.params.pipeline_params import PipelineNames
+from processing_pipelines.params.balancing_params import BalancingStrategies
+from processing_pipelines.data_loading.data_types import PreprocessedData
+from processing_pipelines.params.params import ProgramParams
 
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN

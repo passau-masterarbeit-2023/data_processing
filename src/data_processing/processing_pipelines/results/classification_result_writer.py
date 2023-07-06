@@ -2,7 +2,7 @@ from datetime import datetime
 from commons.results.base_result_writer import BaseResultWriter
 
 from commons.utils.utils import datetime2str
-from value_node_ml.params.pipeline_params import PipelineNames
+from processing_pipelines.params.pipeline_params import PipelineNames
 
 class ClassificationResultsWriter(BaseResultWriter):
     """

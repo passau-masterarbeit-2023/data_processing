@@ -7,12 +7,12 @@ from threading import Lock
 import pandas as pd
 import hashlib
 
-from value_node_ml.data_loading.data_cleaning import clean
-from value_node_ml.data_loading.data_types import PreprocessedData
+from processing_pipelines.data_loading.data_cleaning import clean
+from processing_pipelines.data_loading.data_types import PreprocessedData
 from commons.utils.data_utils import count_positive_and_negative_labels
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.params.params import ProgramParams
-from value_node_ml.params.dataset_loading_params import DatasetLoadingPossibilities
+from processing_pipelines.params.params import ProgramParams
+from processing_pipelines.params.dataset_loading_params import DatasetLoadingPossibilities
 
 
 def __load_samples_and_labels_from_csv(

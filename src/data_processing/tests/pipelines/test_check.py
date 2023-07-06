@@ -1,5 +1,5 @@
-from value_node_ml.data_loading.data_loading import __load_samples_and_labels_from_csv
-from value_node_ml.pipelines.check import __check_samples_and_labels
+from processing_pipelines.data_loading.data_loading import __load_samples_and_labels_from_csv
+from processing_pipelines.pipelines.check import __check_samples_and_labels
 from tests.tests import init_test
 
 def test_check_samples_and_labels():

@@ -1,4 +1,4 @@
-from value_node_ml.params.params import ProgramParams
+from processing_pipelines.params.params import ProgramParams
 from typing import Tuple
 import pandas as pd
 

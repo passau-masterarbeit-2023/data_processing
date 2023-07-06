@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 
 from commons.params.data_origin import DataOriginEnum
-from value_node_ml.data_loading.data_types import PreprocessedData
-from value_node_ml.params.params import ProgramParams
+from processing_pipelines.data_loading.data_types import PreprocessedData
+from processing_pipelines.params.params import ProgramParams
 
 
 def __check_samples_and_labels(params: ProgramParams, samples: pd.DataFrame, labels: pd.Series):
