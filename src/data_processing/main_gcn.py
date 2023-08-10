@@ -8,7 +8,6 @@ def main(params: ProgramParams):
     # load data
     print("Loading data...")
     print("Annotated graph from: {0}".format(params.ANNOTATED_GRAPH_DOT_GV_DIR_PATH))
-    #print("No annotated graph from: {0}".format(params.NO_ANNOTATION_GRAPH_DOT_GV_DIR_PATH))
 
     annotated_graph = load_annotated_graph(params.ANNOTATED_GRAPH_DOT_GV_DIR_PATH + "/Performance_Test_Performance_Test_7572-1650972667-heap.raw_dot.gv")
 
