@@ -137,20 +137,20 @@ class BaseProgramParams(ABC):
         Load environment variables from .env file.
         Overwrite default values with values from .env file if they are defined there.
         """
-        # determine project .env file, using the current python file location
-        # and check recursively in parent directories for the first encountered .env file
-        tmp_folder = os.path.dirname(os.path.abspath(__file__))
-        while not os.path.exists(tmp_folder + "/.env"):
-            tmp_folder = os.path.dirname(tmp_folder)
-            if tmp_folder == "/":
-                print("ERROR: .env file not found")
-                exit(1)
-        self.PROJECT_BASE_DIR = tmp_folder + "/"
-
-
-        # Load environment variables from .env file
         if dotenv_path is None:
-            dotenv_path = self.PROJECT_BASE_DIR + ".env"
+            # determine project .env file, using the current python file location
+            # and check recursively in parent directories for the first encountered .env file
+            tmp_folder = os.path.dirname(os.path.abspath(__file__))
+            while not os.path.exists(tmp_folder + "/.env"):
+                tmp_folder = os.path.dirname(tmp_folder)
+                if tmp_folder == "/":
+                    print("BaseProgramParams ERROR: .env file not found")
+                    exit(1)
+                project_base_dir = tmp_folder + "/"
+
+            # Load environment variables from .env file
+            dotenv_path = project_base_dir + ".env"
+        
         dotenv.load_dotenv(dotenv_path)
 
         # get all class attributes (annotations in Python)
