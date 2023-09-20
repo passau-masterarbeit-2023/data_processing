@@ -1,3 +1,4 @@
 from research_base.params.base_program_params import BaseProgramParams
+import research_base
 
 print(research_base.__file__)

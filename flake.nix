@@ -1,35 +1,46 @@
 {
-  description = "Data processing for my research project (PhdTrack-Masterarbeit).";
-  
+  description = "Data processing for my research project (PhdTrack-Masterarbeit)";
+
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = github:NixOS/nixpkgs/nixos-unstable;
     research-base.url = "github:0nyr/research-base";
   };
 
-  outputs = { self, nixpkgs, research-base, ...}: let
+  outputs = { self, nixpkgs, research-base, ... }: let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
-    
-    my-python-packages = ps: with ps; [
-      # python packages
-      pandas
-      requests
-      datetime
-      graphviz
-      python-dotenv
-      pygraphviz
-      networkx
-
-      # custom packages
-      research-base
-    ];
-
-    my-python = pkgs.python311.withPackages my-python-packages;
-
+    pythonPackages = pkgs.python311Packages;
+    researchPackage = research-base.defaultPackage.${system};
   in {
-    devShells.${system}.default = pkgs.mkShell {
-      packages = [
-        my-python
+    # package definition
+    defaultPackage.${system} = pythonPackages.buildPythonPackage rec {
+      pname = "data-processing-masterarbeit";
+      version = "0.1.0";
+      src = ./.;
+
+      nativeBuildInputs = with pkgs; [
+        pythonPackages.setuptools
+        pythonPackages.pytest
+      ];
+
+      propagatedBuildInputs = with pythonPackages; [
+        python-dotenv
+        pandas
+        requests
+        datetime
+        graphviz
+        pygraphviz
+        networkx
+        researchPackage
+      ];
+
+    };
+
+    # shell definition
+    devShells.${system} = pkgs.mkShell {
+      nativeBuildInputs = with pythonPackages; [
+        python
+        researchPackage
       ];
     };
   };
